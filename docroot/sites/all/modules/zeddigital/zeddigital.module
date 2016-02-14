@@ -17,12 +17,18 @@ function zeddigital_menu() {
   );
 }
 
+/**
+ * Check if the user can delete the current node.
+ */
 function zeddigital_node_delete_access() {
   global $user;
   $node = node_load(arg(1));
   return node_access('delete', $node, $user);
 }
 
+/**
+ * Helper function for menu_local_task.
+ */
 function redirect_to_node_delete() {
   if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
     drupal_goto('node/' . arg(1) . '/delete');
@@ -59,6 +65,10 @@ function zeddigital_node_insert($node) {
   }
 }
 
+/**
+ * Compute "Total Net Budget" value.
+ * The formula is: ("Bought adviews" * "Net Cost-Per-Thou (CPM)") / 1000
+ */
 function computed_field_field_total_net_budget_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
   $adviews = !empty($entity->field_bought_adviews[LANGUAGE_NONE]) ? $entity->field_bought_adviews[LANGUAGE_NONE][0]['value'] : 0;
   $cpm = !empty($entity->field_cpm[LANGUAGE_NONE]) ? $entity->field_cpm[LANGUAGE_NONE][0]['value'] : 0;
