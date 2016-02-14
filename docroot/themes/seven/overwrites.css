@@ -1,6 +1,76 @@
 .submitted {
     text-align: right;
 }
+/* Page node-add-media-plan */
+.page-node-add-media-plan #edit-field-period {
+    width: 325px;
+}
+.page-node-add-media-plan #edit-field-period input {
+    width: 100px;
+}
+.page-node-add-media-plan #edit-field-period .container-inline-date {
+    display: inline-block;
+    width: auto;
+}
+.page-node-add-media-plan #edit-field-period .form-type-date-popup > label{
+    display: inline-block;
+    margin-top: 35px;
+    margin-right: 3px;
+}
+.page-node-add-media-plan #edit-field-period .form-type-date-popup > #edit-field-period-und-0-value2{
+    display: inline-block;
+    float: right;
+}
+.page-node-add-media-plan .field-name-field-websites div[class^="field-name-field"],
+.page-node-add-media-plan .field-name-field-websites div[class*=" field-name-field"] {
+    float: left;
+    height: 50px;
+    margin-right: 10px;
+}
+.page-node-add-media-plan .field-multiple-table th.field-label {
+    padding-left: 5px;
+}
+.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-container {
+    min-width: 250px;
+}
+.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-multiple {
+    width: auto;
+    height: 19px!important;
+    padding: 3px 0;
+}
+.page-node-add-media-plan .field-name-field-websites .field-name-field-total-net-budget {
+    display: none;
+    clear: both;
+}
+.page-node-add-media-plan .field-name-field-websites input {
+    box-sizing: border-box;
+}
+.page-node-add-media-plan .field-name-field-websites input.autocomplete-deluxe-form {
+    max-width: 230px;
+    padding: 5px 5px;
+}
+.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-multiple input.autocomplete-deluxe-form {
+    margin-left: 0;
+}
+.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-item {
+    margin: 0 3px 0 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.page-node-add-media-plan .field-name-field-websites div.autocomplete-deluxe-throbber {
+    width: 20px;
+    height: auto;
+}
+.page-node-add-media-plan .field-name-field-websites .form-type-textfield input {
+    width: 110px;
+    height: 27px;
+}
+.page-node-add-media-plan .field-name-field-websites input.form-submit[value="Remove"] {
+    float: left;
+    margin-top: 20px;
+}
+/* End page node-add-media-plan */
+
 .field-collection-item-field-websites {
     display: table;
     border-collapse:collapse;
