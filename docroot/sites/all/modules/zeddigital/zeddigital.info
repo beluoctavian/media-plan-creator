@@ -1,0 +1,5 @@
+name = Zeddigital
+description = Custom code for Zeddigital project
+package = Zeddigital
+core = 7.x
+files[] = zeddigital.module

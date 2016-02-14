@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function zeddigital_menu() {
+  return array(
+    'node/%node/delete_programmatically' => array(
+      'title' => t('Delete'),
+      'page callback' => 'redirect_to_node_delete',
+      'access callback' => 'zeddigital_node_delete_access',
+      'access arguments' => array($node),
+      'callback arguments' => array($node),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 3,
+    ),
+  );
+}
+
+function zeddigital_node_delete_access() {
+  global $user;
+  $node = node_load(arg(1));
+  return node_access('delete', $node, $user);
+}
+
+function redirect_to_node_delete() {
+  if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
+    drupal_goto('node/' . arg(1) . '/delete');
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function zeddigital_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'media_plan_node_form':
+      unset($form['title']);
+      break;
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function zeddigital_node_insert($node) {
+  if ($node->type == 'media_plan') {
+    $title = $node->nid;
+    $title .= '_' . $node->field_brand[LANGUAGE_NONE][0]['name'];
+    $title = str_replace(' ', '-', $title);
+    db_update('node')
+      ->fields(array('title' => $title,))
+      ->condition('nid', $node->nid)
+      ->execute();
+    db_update('node_revision')
+      ->fields(array('title' => $title,))
+      ->condition('nid', $node->nid)
+      ->execute();
+  }
+}
+
+function computed_field_field_total_net_budget_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
+  $adviews = !empty($entity->field_bought_adviews[LANGUAGE_NONE]) ? $entity->field_bought_adviews[LANGUAGE_NONE][0]['value'] : 0;
+  $cpm = !empty($entity->field_cpm[LANGUAGE_NONE]) ? $entity->field_cpm[LANGUAGE_NONE][0]['value'] : 0;
+  $entity_field[0]['value'] = ($adviews * $cpm) / 1000;
+}
