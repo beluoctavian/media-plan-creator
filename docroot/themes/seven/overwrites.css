@@ -3,23 +3,26 @@
 }
 /* Page node-add-media-plan */
 .page-node-add-media-plan #edit-field-period {
-    width: 325px;
+    width: 343px;
 }
 .page-node-add-media-plan #edit-field-period input {
     width: 100px;
+}
+.page-node-add-media-plan #edit-field-period .fieldset-wrapper {
+    padding-bottom: 0;
 }
 .page-node-add-media-plan #edit-field-period .container-inline-date {
     display: inline-block;
     width: auto;
 }
-.page-node-add-media-plan #edit-field-period .form-type-date-popup > label{
-    display: inline-block;
-    margin-top: 35px;
-    margin-right: 3px;
+.page-node-add-media-plan #edit-field-period #edit-field-period-und-0-value2::before {
+    content: ">";
+    float: left;
+    margin-top: 25px;
+    margin-right: 30px;
 }
-.page-node-add-media-plan #edit-field-period .form-type-date-popup > #edit-field-period-und-0-value2{
-    display: inline-block;
-    float: right;
+.page-node-add-media-plan #edit-field-period .form-type-date-popup > label{
+    display: none;
 }
 .page-node-add-media-plan .field-name-field-websites div[class^="field-name-field"],
 .page-node-add-media-plan .field-name-field-websites div[class*=" field-name-field"] {
