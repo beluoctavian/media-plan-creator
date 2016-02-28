@@ -64,13 +64,3 @@ function zeddigital_node_insert($node) {
       ->execute();
   }
 }
-
-/**
- * Compute "Total Net Budget" value.
- * The formula is: ("Bought adviews" * "Net Cost-Per-Thou (CPM)") / 1000
- */
-function computed_field_field_total_net_budget_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
-  $adviews = !empty($entity->field_bought_adviews[LANGUAGE_NONE]) ? $entity->field_bought_adviews[LANGUAGE_NONE][0]['value'] : 0;
-  $cpm = !empty($entity->field_cpm[LANGUAGE_NONE]) ? $entity->field_cpm[LANGUAGE_NONE][0]['value'] : 0;
-  $entity_field[0]['value'] = ($adviews * $cpm) / 1000;
-}

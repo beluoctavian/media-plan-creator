@@ -6,6 +6,10 @@ jQuery(document).ready(function ($) {
     bought_adviews.change(set_total_net_budget);
     net_cpm.change(set_total_net_budget);
     function set_total_net_budget() {
+        /**
+         * Compute "Total Net Budget" value.
+         * The formula is: ("Bought adviews" * "Net Cost-Per-Thou (CPM)") / 1000
+         */
         total_net_budget.val((bought_adviews.val() * net_cpm.val()) / 1000);
     }
 });
