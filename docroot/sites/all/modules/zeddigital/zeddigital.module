@@ -64,3 +64,20 @@ function zeddigital_node_insert($node) {
       ->execute();
   }
 }
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
+  // TO DO: AJAX AUTOCOMPLETE
+  if (!empty($element['#bundle']) && $element['#bundle'] == 'field_websites' && $element['#field_name'] == 'field_websites') {
+    $field_bouglt_adviews = &$element['field_bought_adviews'];
+    $field_cpm = &$element['field_cpm'];
+    $field_total_net_budget = &$element['field_total_net_budget'];
+
+    $field_bouglt_adviews['#attributes']['delta_website'] = array($context['delta']);
+    $field_cpm['#attributes']['delta_website'] = array($context['delta']);
+    $field_total_net_budget['#attributes']['delta_website'] = array($context['delta']);
+    $field_total_net_budget['#attributes']['disabled'] = array('disabled');
+  }
+}

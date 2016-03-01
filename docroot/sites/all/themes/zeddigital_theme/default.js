@@ -12,5 +12,5 @@ jQuery(document).ready(function ($) {
          */
         total_net_budget.val((bought_adviews.val() * net_cpm.val()) / 1000);
     }
-});
+}(jQuery));
 
