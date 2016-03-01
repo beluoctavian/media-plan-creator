@@ -53,17 +53,48 @@ function redirect_to_node_delete() {
   }
 }
 
+function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
+  $data[3][1] = 'Client:';
+  $data[3][2] = $node_wrapper->field_client->value();
+  $data[4][1] = 'Brand:';
+  $data[4][2] = $node_wrapper->field_brand->value();
+  $data[5][1] = 'Campaign:';
+  $data[5][2] = $node_wrapper->field_campaign->value();
+  $data[6][1] = 'Media Target Audience:';
+  $data[6][2] = $node_wrapper->field_media_target_audience->value();
+  $data[7][1] = 'Period';
+  $start_date = $node_wrapper->field_period->value->value();
+  $end_date = $node_wrapper->field_period->value2->value();
+  $data[7][2] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
+  return 19;
+}
+
 /**
  * Export node to EXCEL.
  */
 function zeddigital_export_node_to_excel() {
   if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
+    module_load_include('inc', 'phpexcel');
+    $data = array();
     $node = node_load(arg(1));
+    dpm($node);
     $node_wrapper = entity_metadata_wrapper('node', $node);
+    $row_num = _zeddigital_set_excel_header_data($data, $node_wrapper);
+    dpm($data);
+
+
+
     foreach ($node_wrapper->field_categories as $category) {
       $category_title = $category->field_category_title->label();
       foreach ($category->field_websites as $website) {
         $site_name = $website->field_site->label();
+        $supplier = $website->field_supplier->label();
+        $site_category = $website->field_category->label();
+        $ad_format = $website->field_ad_format->label();
+        $campaign_type = $website->field_campaign_type->label();
+        $bought_adviews = $website->field_bought_adviews->value();
+        $cpm = $website->field_cpm->value();
+        $total_net_budget = $website->field_total_net_budget->value();
       }
     }
     drupal_goto('node/' . $node->nid);
