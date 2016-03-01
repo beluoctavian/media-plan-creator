@@ -74,18 +74,18 @@ function redirect_to_node_delete() {
 }
 
 function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
-  $data[2][1] = 'Client:';
-  $data[2][2] = $node_wrapper->field_client->value();
-  $data[3][1] = 'Brand:';
-  $data[3][2] = $node_wrapper->field_brand->value();
-  $data[4][1] = 'Campaign:';
-  $data[4][2] = $node_wrapper->field_campaign->value();
-  $data[5][1] = 'Media Target Audience:';
-  $data[5][2] = $node_wrapper->field_media_target_audience->value();
-  $data[6][1] = 'Period';
+  $data['B'][2] = 'Client:';
+  $data['C'][2] = $node_wrapper->field_client->value();
+  $data['B'][3] = 'Brand:';
+  $data['C'][3] = $node_wrapper->field_brand->label();
+  $data['B'][4] = 'Campaign:';
+  $data['C'][4] = $node_wrapper->field_campaign->value();
+  $data['B'][5] = 'Media Target Audience:';
+  $data['C'][5] = $node_wrapper->field_media_target_audience->label();
+  $data['B'][6] = 'Period';
   $start_date = $node_wrapper->field_period->value->value();
   $end_date = $node_wrapper->field_period->value2->value();
-  $data[6][2] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
+  $data['C'][6] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
   return 10;
 }
 
@@ -96,24 +96,26 @@ function _zeddigital_save_excel($data, $node_wrapper) {
 
   // Store the file in sites/default/files
   $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
-  $filename = 'export.xls';
-  $path = "$dir/$filename";
+  $filename = 'mp_export_' . $node_wrapper->getIdentifier() . '.xls';
+  $path = "$dir/media_plans/$filename";
 
-  $objPHPExcel->getActiveSheet()->;
+  foreach ($data as $col => $values) {
+    foreach ($values as $row => $val) {
+      $objPHPExcel->getActiveSheet()->SetCellValue($col.$row, $val);
+    }
+  }
 
-//
-//  $options = [
-//    'format' => 'xls',
-//    'ignore_headers' => TRUE,
-//  ];
-//
-//  $result = phpexcel_export([], $data, $path, $options);
-//  if ($result == PHPEXCEL_SUCCESS) {
-//    drupal_set_message(t("Media Plan exported successfully!"));
-//  }
-//  else {
-//    drupal_set_message(t("Oops ! An error occured !"), 'error');
-//  }
+  // Set columns width
+  foreach(range('A','Z') as $columnID) {
+    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+  }
+
+  $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+  if (file_exists($path)) {
+    unlink($path);
+  }
+  $objWriter->save($path);
+  drupal_set_message(t("Media Plan exported successfully!"));
 }
 
 /**
