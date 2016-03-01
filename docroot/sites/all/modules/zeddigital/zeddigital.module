@@ -14,6 +14,15 @@ function zeddigital_menu() {
       'type' => MENU_LOCAL_TASK,
       'weight' => 3,
     ),
+    'node/%node/export_to_excel' => array(
+      'title' => t('Export to EXCEL'),
+      'page callback' => 'zeddigital_export_node_to_excel',
+      'access callback' => 'zeddigital_node_export_access',
+      'access arguments' => array($node),
+      'callback arguments' => array($node),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 4,
+    ),
   );
 }
 
@@ -27,11 +36,30 @@ function zeddigital_node_delete_access() {
 }
 
 /**
+ * Check if the user can export the current node.
+ */
+function zeddigital_node_export_access() {
+  global $user;
+  $node = node_load(arg(1));
+  return node_access('view', $node, $user);
+}
+
+/**
  * Helper function for menu_local_task.
  */
 function redirect_to_node_delete() {
   if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
     drupal_goto('node/' . arg(1) . '/delete');
+  }
+}
+
+/**
+ * Export node to EXCEL.
+ */
+function zeddigital_export_node_to_excel() {
+  if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    dpm($node);
   }
 }
 
