@@ -59,7 +59,13 @@ function redirect_to_node_delete() {
 function zeddigital_export_node_to_excel() {
   if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
     $node = node_load(arg(1));
-    dpm($node);
+    $node_wrapper = entity_metadata_wrapper('node', $node);
+    foreach ($node_wrapper->field_categories as $category) {
+      $category_title = $category->field_category_title->label();
+      foreach ($category->field_websites as $website) {
+        $site_name = $website->field_site->label();
+      }
+    }
     drupal_goto('node/' . $node->nid);
   }
 }
