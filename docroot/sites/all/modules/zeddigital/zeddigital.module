@@ -27,6 +27,26 @@ function zeddigital_menu() {
 }
 
 /**
+ * Implements hook_libraries_info().
+ */
+function zeddigital_libraries_info() {
+  return array(
+    'PHPExcel' => array(
+      'name' => 'PHPExcel',
+      'vendor url' => 'http://phpexcel.codeplex.com/',
+      'download url' => 'https://github.com/PHPOffice/PHPExcel',
+      'version callback' => 'phpexcel_get_library_version',
+      'path' => 'Classes',
+      'files' => array(
+        'php' => array(
+          'PHPExcel.php',
+        ),
+      ),
+    ),
+  );
+}
+
+/**
  * Check if the user can delete the current node.
  */
 function zeddigital_node_delete_access() {
@@ -54,19 +74,46 @@ function redirect_to_node_delete() {
 }
 
 function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
-  $data[3][1] = 'Client:';
-  $data[3][2] = $node_wrapper->field_client->value();
-  $data[4][1] = 'Brand:';
-  $data[4][2] = $node_wrapper->field_brand->value();
-  $data[5][1] = 'Campaign:';
-  $data[5][2] = $node_wrapper->field_campaign->value();
-  $data[6][1] = 'Media Target Audience:';
-  $data[6][2] = $node_wrapper->field_media_target_audience->value();
-  $data[7][1] = 'Period';
+  $data[2][1] = 'Client:';
+  $data[2][2] = $node_wrapper->field_client->value();
+  $data[3][1] = 'Brand:';
+  $data[3][2] = $node_wrapper->field_brand->value();
+  $data[4][1] = 'Campaign:';
+  $data[4][2] = $node_wrapper->field_campaign->value();
+  $data[5][1] = 'Media Target Audience:';
+  $data[5][2] = $node_wrapper->field_media_target_audience->value();
+  $data[6][1] = 'Period';
   $start_date = $node_wrapper->field_period->value->value();
   $end_date = $node_wrapper->field_period->value2->value();
-  $data[7][2] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
-  return 19;
+  $data[6][2] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
+  return 10;
+}
+
+function _zeddigital_save_excel($data, $node_wrapper) {
+  libraries_load('PHPExcel');
+  $objPHPExcel = new PHPExcel();
+  $objPHPExcel->setActiveSheetIndex(0);
+
+  // Store the file in sites/default/files
+  $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
+  $filename = 'export.xls';
+  $path = "$dir/$filename";
+
+  $objPHPExcel->getActiveSheet()->;
+
+//
+//  $options = [
+//    'format' => 'xls',
+//    'ignore_headers' => TRUE,
+//  ];
+//
+//  $result = phpexcel_export([], $data, $path, $options);
+//  if ($result == PHPEXCEL_SUCCESS) {
+//    drupal_set_message(t("Media Plan exported successfully!"));
+//  }
+//  else {
+//    drupal_set_message(t("Oops ! An error occured !"), 'error');
+//  }
 }
 
 /**
@@ -74,15 +121,11 @@ function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
  */
 function zeddigital_export_node_to_excel() {
   if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
-    module_load_include('inc', 'phpexcel');
     $data = array();
     $node = node_load(arg(1));
-    dpm($node);
     $node_wrapper = entity_metadata_wrapper('node', $node);
     $row_num = _zeddigital_set_excel_header_data($data, $node_wrapper);
-    dpm($data);
-
-
+    _zeddigital_save_excel($data, $node_wrapper);
 
     foreach ($node_wrapper->field_categories as $category) {
       $category_title = $category->field_category_title->label();
