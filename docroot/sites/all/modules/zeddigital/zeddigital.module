@@ -60,6 +60,7 @@ function zeddigital_export_node_to_excel() {
   if (arg(0) == 'node' && arg(1) && is_numeric(arg(1))) {
     $node = node_load(arg(1));
     dpm($node);
+    drupal_goto('node/' . $node->nid);
   }
 }
 
