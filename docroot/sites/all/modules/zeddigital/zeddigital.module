@@ -75,17 +75,17 @@ function redirect_to_node_delete() {
 
 function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
   $data['B'][2] = 'Client:';
-  $data['C'][2] = $node_wrapper->field_client->value();
+  $data['D'][2] = $node_wrapper->field_client->value();
   $data['B'][3] = 'Brand:';
-  $data['C'][3] = $node_wrapper->field_brand->label();
+  $data['D'][3] = $node_wrapper->field_brand->label();
   $data['B'][4] = 'Campaign:';
-  $data['C'][4] = $node_wrapper->field_campaign->value();
+  $data['D'][4] = $node_wrapper->field_campaign->value();
   $data['B'][5] = 'Media Target Audience:';
-  $data['C'][5] = $node_wrapper->field_media_target_audience->label();
+  $data['D'][5] = $node_wrapper->field_media_target_audience->label();
   $data['B'][6] = 'Period';
   $start_date = $node_wrapper->field_period->value->value();
   $end_date = $node_wrapper->field_period->value2->value();
-  $data['C'][6] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
+  $data['D'][6] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
   return 10;
 }
 
@@ -93,22 +93,56 @@ function _zeddigital_save_excel($data, $node_wrapper) {
   libraries_load('PHPExcel');
   $objPHPExcel = new PHPExcel();
   $objPHPExcel->setActiveSheetIndex(0);
+  $activeSheet = $objPHPExcel->getActiveSheet();
 
   // Store the file in sites/default/files
   $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
   $filename = 'mp_export_' . $node_wrapper->getIdentifier() . '.xls';
   $path = "$dir/media_plans/$filename";
 
+  $max_row = 0;
+
   foreach ($data as $col => $values) {
     foreach ($values as $row => $val) {
-      $objPHPExcel->getActiveSheet()->SetCellValue($col.$row, $val);
+      $max_row = $row > $max_row ? $row : $max_row;
+      $activeSheet->SetCellValue($col.$row, $val);
     }
   }
 
   // Set columns width
   foreach(range('A','Z') as $columnID) {
-    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+    $activeSheet->getColumnDimension($columnID)->setAutoSize(true);
   }
+  $activeSheet->getColumnDimension('C')->setAutoSize(false);
+
+
+  // Set rows height
+  foreach(range(0, $max_row) as $rowID) {
+    $activeSheet->getRowDimension($rowID)->setRowHeight(25);
+  }
+
+  $allStyle = array(
+    'alignment' => array(
+      'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+    ),
+    'borders' => array(
+      'allborders' => array(
+        'style' => PHPExcel_Style_Border::BORDER_THIN,
+        'color' => ['rgb' => 'FFFFFF'],
+      ),
+    ),
+  );
+  $activeSheet->getStyle('A1:AZ200')->applyFromArray($allStyle);
+
+  $borderStyle = array(
+    'borders' => array(
+      'allborders' => array(
+        'style' => PHPExcel_Style_Border::BORDER_MEDIUM,
+        'color' => ['rgb' => '000000'],
+      ),
+    ),
+  );
+  $activeSheet->getStyle('B2:D6')->applyFromArray($borderStyle);
 
   $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
   if (file_exists($path)) {
