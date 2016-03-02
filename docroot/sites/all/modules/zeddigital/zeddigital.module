@@ -74,18 +74,20 @@ function redirect_to_node_delete() {
 }
 
 function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
-  $data['B'][2] = 'Client:';
-  $data['D'][2] = $node_wrapper->field_client->value();
-  $data['B'][3] = 'Brand:';
-  $data['D'][3] = $node_wrapper->field_brand->label();
-  $data['B'][4] = 'Campaign:';
-  $data['D'][4] = $node_wrapper->field_campaign->value();
-  $data['B'][5] = 'Media Target Audience:';
-  $data['D'][5] = $node_wrapper->field_media_target_audience->label();
-  $data['B'][6] = 'Period';
+  $data['B'][1] = 'ONLINE CAMPAIGN';
+  $start_row = 3;
+  $data['B'][$start_row] = 'Client:';
+  $data['D'][$start_row++] = $node_wrapper->field_client->value();
+  $data['B'][$start_row] = 'Brand:';
+  $data['D'][$start_row++] = $node_wrapper->field_brand->label();
+  $data['B'][$start_row] = 'Campaign:';
+  $data['D'][$start_row++] = $node_wrapper->field_campaign->value();
+  $data['B'][$start_row] = 'Media Target Audience:';
+  $data['D'][$start_row++] = $node_wrapper->field_media_target_audience->label();
+  $data['B'][$start_row] = 'Period';
   $start_date = $node_wrapper->field_period->value->value();
   $end_date = $node_wrapper->field_period->value2->value();
-  $data['D'][6] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
+  $data['D'][$start_row++] = gmdate('d M Y - ', $start_date) . gmdate('d M Y', $end_date);
   return 10;
 }
 
@@ -142,7 +144,7 @@ function _zeddigital_save_excel($data, $node_wrapper) {
       ),
     ),
   );
-  $activeSheet->getStyle('B2:D6')->applyFromArray($borderStyle);
+  $activeSheet->getStyle('B3:D7')->applyFromArray($borderStyle);
 
   $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
   if (file_exists($path)) {
