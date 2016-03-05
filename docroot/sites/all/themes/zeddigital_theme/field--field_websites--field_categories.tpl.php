@@ -43,6 +43,11 @@
  *
  * @ingroup themeable
  */
+$term_ref_fields = [
+  'field_category',
+  'field_ad_format',
+  'field_campaign_type',
+];
 ?>
 <div class="<?php print $classes; ?>"<?php print $attributes; ?>>
   <?php if (!$label_hidden): ?>
@@ -51,19 +56,22 @@
   <div class="field-items"<?php print $content_attributes; ?>>
     <tbody>
     <?php foreach ($items as $delta => $item): ?>
-      <tr>
+      <tr class="<?php print $delta%2==0 ? 'odd' : 'even'; ?>">
         <?php
         $field_collection_item = $item['entity']['field_collection_item'];
         $collection = entity_metadata_wrapper('field_collection_item', key($field_collection_item));
-//        dpm($collection->field_category->value());
-//        dpm($collection->field_ad_format->value());
-//        dpm($collection->field_campaign_type->value());
+        foreach ($term_ref_fields as $field) {
+          ${$field} = [];
+          foreach ($collection->{$field}->value() as $term) {
+            ${$field}[] = $term->name;
+          }
+        }
         ?>
         <td><?php print $collection->field_site->value()->name; ?></td>
         <td><?php print $collection->field_supplier->value()->name; ?></td>
-        <td>category</td>
-        <td>ad</td>
-        <td>ctype</td>
+        <td><?php print implode(', ', $field_category); ?></td>
+        <td><?php print implode(', ', $field_ad_format); ?></td>
+        <td><?php print implode(', ', $field_campaign_type); ?></td>
         <td><?php print $collection->field_bought_adviews->value(); ?></td>
         <td><?php print $collection->field_cpm->value(); ?></td>
         <td><?php print $collection->field_total_net_budget->value(); ?></td>
