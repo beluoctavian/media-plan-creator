@@ -79,7 +79,6 @@
  *
  * @ingroup themeable
  */
-dpm($node);
 $node_wrapper = entity_metadata_wrapper('node', $node);
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
