@@ -73,6 +73,33 @@ function redirect_to_node_delete() {
   }
 }
 
+function _zeddigital_excel_set_cell_background(&$sheet, $bgcolor = '000000', $target, $bold = FALSE) {
+  $style = array(
+    'fill' => array(
+      'type' => PHPExcel_Style_Fill::FILL_SOLID,
+      'color' => array('rgb' => $bgcolor)
+    ),
+    'font'  => array(
+      'bold'  => $bold,
+      'color' => array('rgb' => 'FFFFFF'),
+    ),
+    'borders' => array(
+      'allborders' => array(
+        'style' => PHPExcel_Style_Border::BORDER_THIN,
+        'color' => ['rgb' => '000000'],
+      ),
+    ),
+  );
+  if (is_array($target)) {
+    foreach ($target as $t) {
+      $sheet->getStyle($t)->applyFromArray($style);
+    }
+  }
+  else {
+    $sheet->getStyle($target)->applyFromArray($style);
+  }
+}
+
 function _initialize_excel_writer() {
   libraries_load('PHPExcel');
   $objPHPExcel = new PHPExcel();
@@ -82,11 +109,9 @@ function _initialize_excel_writer() {
     'alignment' => array(
       'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
     ),
-    'borders' => array(
-      'allborders' => array(
-        'style' => PHPExcel_Style_Border::BORDER_THIN,
-        'color' => ['rgb' => 'FFFFFF'],
-      ),
+    'fill' => array(
+      'type' => PHPExcel_Style_Fill::FILL_SOLID,
+      'color' => array('rgb' => 'FFFFFF')
     ),
   );
   $activeSheet->getStyle('A1:AZ200')->applyFromArray($style);
@@ -131,6 +156,7 @@ function _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper) {
   }
 
   $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+  $objWriter->setPreCalculateFormulas(true);
   if (file_exists($path)) {
     unlink($path);
   }
@@ -153,45 +179,24 @@ function _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper) {
 
 function _zeddigital_set_excel_header_data(&$sheet, array &$data, $node_wrapper) {
   $data['B'][1] = 'ONLINE CAMPAIGN';
-  $start_row = 3;
-  $data['B'][$start_row] = 'Client:';
-  $data['D'][$start_row++] = $node_wrapper->field_client->value();
-  $data['B'][$start_row] = 'Brand:';
-  $data['D'][$start_row++] = $node_wrapper->field_brand->label();
-  $data['B'][$start_row] = 'Campaign:';
-  $data['D'][$start_row++] = $node_wrapper->field_campaign->value();
-  $data['B'][$start_row] = 'Media Target Audience:';
-  $data['D'][$start_row++] = $node_wrapper->field_media_target_audience->label();
-  $data['B'][$start_row] = 'Period';
+  $start_row = $row = 3;
+  $first_col = 'B';
+  $second_col = 'C';
+  $data[$first_col][$row] = 'Client:';
+  $data[$second_col][$row++] = $node_wrapper->field_client->value();
+  $data[$first_col][$row] = 'Brand:';
+  $data[$second_col][$row++] = $node_wrapper->field_brand->label();
+  $data[$first_col][$row] = 'Campaign:';
+  $data[$second_col][$row++] = $node_wrapper->field_campaign->value();
+  $data[$first_col][$row] = 'Media Target Audience:';
+  $data[$second_col][$row++] = $node_wrapper->field_media_target_audience->label();
+  $data[$first_col][$row] = 'Period';
   if (!empty($node_wrapper->field_period->value())){
     $start_date = isset($node_wrapper->field_period) ? gmdate('d M Y', $node_wrapper->field_period->value->value()) : '';
     $end_date = isset($node_wrapper->field_period) ? gmdate(' - d M Y', $node_wrapper->field_period->value2->value()) : '';
-    $data['D'][$start_row] = $start_date . $end_date;
+    $data[$second_col][$row] = $start_date . $end_date;
   }
   $style = array(
-    'borders' => array(
-      'allborders' => array(
-        'style' => PHPExcel_Style_Border::BORDER_MEDIUM,
-        'color' => ['rgb' => '000000'],
-      ),
-    ),
-  );
-  $sheet->getStyle('B3:D7')->applyFromArray($style);
-  return 9;
-}
-
-function _zeddigital_excel_set_category_header(&$sheet, array &$data, &$row_num, $category) {
-  $category_title = $category->field_category_title->label();
-  $data['B'][$row_num] = $category_title;
-  $style = array(
-    'fill' => array(
-      'type' => PHPExcel_Style_Fill::FILL_SOLID,
-      'color' => array('rgb' => '000000')
-    ),
-    'font'  => array(
-      'bold'  => true,
-      'color' => array('rgb' => 'FFFFFF'),
-    ),
     'borders' => array(
       'allborders' => array(
         'style' => PHPExcel_Style_Border::BORDER_THIN,
@@ -199,7 +204,14 @@ function _zeddigital_excel_set_category_header(&$sheet, array &$data, &$row_num,
       ),
     ),
   );
-  $sheet->getStyle("B{$row_num}:I{$row_num}")->applyFromArray($style);
+  $sheet->getStyle("{$first_col}{$start_row}:{$second_col}{$row}")->applyFromArray($style);
+  return 11;
+}
+
+function _zeddigital_excel_set_category_header(&$sheet, array &$data, &$row_num, $category) {
+  $category_title = $category->field_category_title->label();
+  $data['B'][$row_num] = $category_title;
+  _zeddigital_excel_set_cell_background($sheet, '000000', "B{$row_num}:I{$row_num}", TRUE);
   $row_num++;
   $data['B'][$row_num] = 'Site';
   $data['C'][$row_num] = 'Supplier';
@@ -209,12 +221,7 @@ function _zeddigital_excel_set_category_header(&$sheet, array &$data, &$row_num,
   $data['G'][$row_num] = 'Bought Adviews';
   $data['H'][$row_num] = 'Net Cost-Per-Thou (CPM)';
   $data['I'][$row_num] = 'Total net budget';
-  $style['fill'] = array(
-    'type' => PHPExcel_Style_Fill::FILL_SOLID,
-    'color' => array('rgb' => '006600')
-  );
-  $style['font']['bold'] = false;
-  $sheet->getStyle("B{$row_num}:I{$row_num}")->applyFromArray($style);
+  _zeddigital_excel_set_cell_background($sheet, '006600', "B{$row_num}:I{$row_num}", FALSE);
   $row_num++;
 }
 
@@ -267,11 +274,16 @@ function zeddigital_export_node_to_excel($node = NULL) {
 
   foreach ($node_wrapper->field_categories as $category) {
     _zeddigital_excel_set_category_header($sheet, $data, $row_num, $category);
+    $first_row = $row_num;
     foreach ($category->field_websites as $website) {
       $data['A'][$row_num] = "#{$node_wrapper->label()}";
       _zeddigital_excel_append_site($sheet, $data, $row_num, $website);
     }
-    $row_num++;
+    $last_row = $row_num - 1;
+    $data['G'][$row_num] = "=SUM(G{$first_row}:G{$last_row})";
+    $data['I'][$row_num] = "=SUM(I{$first_row}:I{$last_row})";
+    _zeddigital_excel_set_cell_background($sheet, '006600', ["I{$row_num}", "G{$row_num}"], FALSE);
+    $row_num += 2;
   }
   _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper);
   drupal_goto('node/' . $node->nid);
