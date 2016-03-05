@@ -1,7 +1,9 @@
-  <div id="main-menu-container">
-    <?php print theme('links__system_main_menu', array('links' => $main_menu)); ?>
-  </div>
-
+  <?php if($logged_in): ?>
+    <div id="main-menu-container">
+      <?php print theme('links__system_main_menu', array('links' => $main_menu)); ?>
+    </div>
+  <?php endif; ?>
+  
   <div id="branding" class="clearfix">
     <?php //print $breadcrumb; ?>
     <?php print render($title_prefix); ?>
