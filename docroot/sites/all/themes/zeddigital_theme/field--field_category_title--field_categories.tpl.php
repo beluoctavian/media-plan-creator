@@ -50,9 +50,23 @@
   <?php endif; ?>
   <div class="field-items"<?php print $content_attributes; ?>>
     <?php foreach ($items as $delta => $item): ?>
-      <div class="field-item <?php print $delta % 2 ? 'odd' : 'even'; ?>"<?php print $item_attributes[$delta]; ?>>
-        <?php print render($item); ?>
-      </div>
+      <thead>
+        <tr class="category-main-title">
+          <th colspan="8">
+            <?php print render($item); ?>
+          </th>
+        </tr>
+        <tr class="category-table-header">
+          <th>Site</th>
+          <th>Supplier</th>
+          <th>Site category</th>
+          <th>Ad Format</th>
+          <th>Campaign type</th>
+          <th>Bought Adviews</th>
+          <th>Net Cost-Per-Thou (CPM)</th>
+          <th>Total net budget</th>
+        </tr>
+      </thead>
     <?php endforeach; ?>
   </div>
 </div>
