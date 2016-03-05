@@ -2,72 +2,72 @@
     text-align: right;
 }
 /* Page node-add-media-plan */
-.page-node-add-media-plan #edit-field-period {
+#edit-field-period {
     width: 343px;
 }
-.page-node-add-media-plan #edit-field-period input {
+#edit-field-period input {
     width: 100px;
 }
-.page-node-add-media-plan #edit-field-period .fieldset-wrapper {
+#edit-field-period .fieldset-wrapper {
     padding-bottom: 0;
 }
-.page-node-add-media-plan #edit-field-period .container-inline-date {
+#edit-field-period .container-inline-date {
     display: inline-block;
     width: auto;
 }
-.page-node-add-media-plan #edit-field-period #edit-field-period-und-0-value2::before {
+#edit-field-period #edit-field-period-und-0-value2::before {
     content: ">";
     float: left;
     margin-top: 25px;
     margin-right: 30px;
 }
-.page-node-add-media-plan #edit-field-period .form-type-date-popup > label{
+#edit-field-period .form-type-date-popup > label{
     display: none;
 }
-.page-node-add-media-plan .field-name-field-websites div[class^="field-name-field"],
-.page-node-add-media-plan .field-name-field-websites div[class*=" field-name-field"] {
+.field-name-field-websites div[class^="field-name-field"],
+.field-name-field-websites div[class*=" field-name-field"] {
     float: left;
     height: 50px;
     margin-right: 10px;
 }
-.page-node-add-media-plan .field-multiple-table th.field-label {
+.field-multiple-table th.field-label {
     padding-left: 5px;
 }
-.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-container {
+.field-name-field-websites .autocomplete-deluxe-container {
     min-width: 250px;
 }
-.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-multiple {
+.field-name-field-websites .autocomplete-deluxe-multiple {
     width: auto;
     height: 19px!important;
     padding: 3px 0;
 }
-.page-node-add-media-plan .field-name-field-websites .field-name-field-total-net-budget input {
+.field-name-field-websites .field-name-field-total-net-budget input {
     background-color: #d7d7d7;
 }
-.page-node-add-media-plan .field-name-field-websites input {
+.field-name-field-websites input {
     box-sizing: border-box;
 }
-.page-node-add-media-plan .field-name-field-websites input.autocomplete-deluxe-form {
+.field-name-field-websites input.autocomplete-deluxe-form {
     max-width: 230px;
     padding: 5px 5px;
 }
-.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-multiple input.autocomplete-deluxe-form {
+.field-name-field-websites .autocomplete-deluxe-multiple input.autocomplete-deluxe-form {
     margin-left: 0;
 }
-.page-node-add-media-plan .field-name-field-websites .autocomplete-deluxe-item {
+.field-name-field-websites .autocomplete-deluxe-item {
     margin: 0 3px 0 0;
     padding-top: 2px;
     padding-bottom: 2px;
 }
-.page-node-add-media-plan .field-name-field-websites div.autocomplete-deluxe-throbber {
+.field-name-field-websites div.autocomplete-deluxe-throbber {
     width: 20px;
     height: auto;
 }
-.page-node-add-media-plan .field-name-field-websites .form-type-textfield input {
+.field-name-field-websites .form-type-textfield input {
     width: 110px;
     height: 27px;
 }
-.page-node-add-media-plan .field-name-field-websites input.form-submit[value="Remove"] {
+.field-name-field-websites input.form-submit[value="Remove"] {
     float: left;
     margin-top: 20px;
 }
