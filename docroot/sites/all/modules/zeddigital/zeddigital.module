@@ -1,5 +1,7 @@
 <?php
 
+define('TOTAL_NET_BUDGET_COL', 'I');
+
 /**
  * Implements hook_menu().
  */
@@ -100,6 +102,34 @@ function _zeddigital_excel_set_cell_background(&$sheet, $bgcolor = '000000', $ta
   }
 }
 
+function _zeddigital_excel_center_text(&$sheet, $target) {
+  $style = array(
+    'alignment' => array(
+      'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+    ),
+  );
+  if (is_array($target)) {
+    foreach ($target as $t) {
+      $sheet->getStyle($t)->applyFromArray($style);
+    }
+  }
+  else {
+    $sheet->getStyle($target)->applyFromArray($style);
+  }
+}
+
+function _zeddigital_excel_set_boder(&$sheet, $target, $borderColor = '000000', $borderStyle = PHPExcel_Style_Border::BORDER_THIN) {
+  $style = array(
+    'borders' => array(
+      'allborders' => array(
+        'style' => $borderStyle,
+        'color' => ['rgb' => $borderColor],
+      ),
+    ),
+  );
+  $sheet->getStyle($target)->applyFromArray($style);
+}
+
 function _initialize_excel_writer() {
   libraries_load('PHPExcel');
   $objPHPExcel = new PHPExcel();
@@ -196,15 +226,7 @@ function _zeddigital_set_excel_header_data(&$sheet, array &$data, $node_wrapper)
     $end_date = isset($node_wrapper->field_period) ? gmdate(' - d M Y', $node_wrapper->field_period->value2->value()) : '';
     $data[$second_col][$row] = $start_date . $end_date;
   }
-  $style = array(
-    'borders' => array(
-      'allborders' => array(
-        'style' => PHPExcel_Style_Border::BORDER_THIN,
-        'color' => ['rgb' => '000000'],
-      ),
-    ),
-  );
-  $sheet->getStyle("{$first_col}{$start_row}:{$second_col}{$row}")->applyFromArray($style);
+  _zeddigital_excel_set_boder($sheet, "{$first_col}{$start_row}:{$second_col}{$row}");
   return 11;
 }
 
@@ -220,7 +242,7 @@ function _zeddigital_excel_set_category_header(&$sheet, array &$data, &$row_num,
   $data['F'][$row_num] = 'Campaign type';
   $data['G'][$row_num] = 'Bought Adviews';
   $data['H'][$row_num] = 'Net Cost-Per-Thou (CPM)';
-  $data['I'][$row_num] = 'Total net budget';
+  $data[TOTAL_NET_BUDGET_COL][$row_num] = 'Total net budget';
   _zeddigital_excel_set_cell_background($sheet, '006600', "B{$row_num}:I{$row_num}", FALSE);
   $row_num++;
 }
@@ -242,18 +264,24 @@ function _zeddigital_excel_append_site(&$sheet, array &$data, &$row_num, $websit
   $data['F'][$row_num] = $campaign_type;
   $data['G'][$row_num] = $bought_adviews;
   $data['H'][$row_num] = $cpm;
-  $data['I'][$row_num] = $total_net_budget;
-
-  $style = array(
-    'borders' => array(
-      'allborders' => array(
-        'style' => PHPExcel_Style_Border::BORDER_THIN,
-        'color' => ['rgb' => '000000'],
-      ),
-    ),
-  );
-  $sheet->getStyle("B{$row_num}:I{$row_num}")->applyFromArray($style);
+  $data[TOTAL_NET_BUDGET_COL][$row_num] = $total_net_budget;
+  _zeddigital_excel_set_boder($sheet, "B{$row_num}:I{$row_num}");
   $row_num++;
+}
+
+function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, &$row_num) {
+  $sheet->mergeCells("B{$row_num}:E{$row_num}");
+  $data['B'][$row_num] = 'BUDGET SUMMARY';
+  _zeddigital_excel_set_cell_background($sheet, '006600', "B{$row_num}:E{$row_num}", TRUE);
+  _zeddigital_excel_center_text($sheet, "B{$row_num}");
+
+  $row_num += 2;
+  $start_row = $row_num;
+
+  $data['B'][$row_num] = 'Net Media Budget';
+  $data['D'][$row_num] = '=' . implode('+', $budget_cells);
+//  _zeddigital_excel_set_cell_background($sheet, '006600', "B{$row_num}:E{$row_num}", FALSE);
+  _zeddigital_excel_set_boder($sheet, "B{$start_row}:E{$row_num}");
 }
 
 /**
@@ -266,7 +294,8 @@ function zeddigital_export_node_to_excel($node = NULL) {
     }
     $node = node_load(arg(1));
   }
-  $data = array();
+  $data = [];
+  $net_budget_cells = [];
   $node_wrapper = entity_metadata_wrapper('node', $node);
   $objPHPExcel = _initialize_excel_writer();
   $sheet = $objPHPExcel->getActiveSheet();
@@ -281,10 +310,12 @@ function zeddigital_export_node_to_excel($node = NULL) {
     }
     $last_row = $row_num - 1;
     $data['G'][$row_num] = "=SUM(G{$first_row}:G{$last_row})";
-    $data['I'][$row_num] = "=SUM(I{$first_row}:I{$last_row})";
+    $data[TOTAL_NET_BUDGET_COL][$row_num] = "=SUM(I{$first_row}:I{$last_row})";
+    $net_budget_cells[] = TOTAL_NET_BUDGET_COL . $row_num;
     _zeddigital_excel_set_cell_background($sheet, '006600', ["I{$row_num}", "G{$row_num}"], FALSE);
     $row_num += 2;
   }
+  _zeddigital_excel_budget_summary($sheet, $data, $net_budget_cells, $row_num);
   _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper);
   drupal_goto('node/' . $node->nid);
 }
