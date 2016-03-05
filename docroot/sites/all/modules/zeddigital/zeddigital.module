@@ -384,3 +384,31 @@ function zeddigital_node_view($node, $view_mode, $langcode) {
     zeddigital_export_node_to_excel($node);
   }
 }
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function zeddigital_taxonomy_term_insert($term) {
+  $suppliers_voc = taxonomy_vocabulary_machine_name_load('suppliers');
+  if ($term->vid == $suppliers_voc->vid) {
+    $supplier_user = user_load_by_name($term->name);
+    if (empty($supplier_user)) {
+      $roles = user_roles();
+      $supplier_rid = array_search('supplier', $roles);
+      $username = str_replace(' ', '', $term->name);
+      $new_user = array(
+        'name' => $username,
+        'pass' => md5('password'),
+        'mail' => $username . '@example.com',
+        'status' => 1,
+        'roles' => array(
+          DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+          $supplier_rid => 'supplier',
+        ),
+      );
+
+      // The first parameter is sent blank so a new user is created.
+      user_save(NULL, $new_user);
+    }
+  }
+}
