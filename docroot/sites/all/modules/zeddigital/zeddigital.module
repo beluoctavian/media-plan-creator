@@ -16,15 +16,15 @@ function zeddigital_menu() {
       'type' => MENU_LOCAL_TASK,
       'weight' => 3,
     ),
-    'node/%node/export_to_excel' => array(
-      'title' => t('Export to EXCEL'),
-      'page callback' => 'zeddigital_export_node_to_excel',
-      'access callback' => 'zeddigital_node_export_access',
-      'access arguments' => array($node),
-      'callback arguments' => array($node),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 4,
-    ),
+//    'node/%node/export_to_excel' => array(
+//      'title' => t('Export to EXCEL'),
+//      'page callback' => 'zeddigital_export_node_to_excel',
+//      'access callback' => 'zeddigital_node_export_access',
+//      'access arguments' => array($node),
+//      'callback arguments' => array($node),
+//      'type' => MENU_LOCAL_TASK,
+//      'weight' => 4,
+//    ),
   );
 }
 
