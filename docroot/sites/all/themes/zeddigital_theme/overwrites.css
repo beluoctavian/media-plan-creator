@@ -87,4 +87,7 @@
     color: #FFFFFF;
     border-color: #000000;
 }
+.media-plan-category tbody td {
+    border: 1px solid #bebfb9;
+}
 /* End page-node node-type-media-plan */

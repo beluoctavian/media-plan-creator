@@ -49,12 +49,26 @@
     <div class="field-label"<?php print $title_attributes; ?>><?php print $label ?>:&nbsp;</div>
   <?php endif; ?>
   <div class="field-items"<?php print $content_attributes; ?>>
+    <tbody>
     <?php foreach ($items as $delta => $item): ?>
-      <div class="field-item <?php print $delta % 2 ? 'odd' : 'even'; ?>"<?php print $item_attributes[$delta]; ?>>
-        <table class="views-table media-plan-category">
-          <?php print render($item); ?>
-        </table>
-      </div>
+      <tr>
+        <?php
+        $field_collection_item = $item['entity']['field_collection_item'];
+        $collection = entity_metadata_wrapper('field_collection_item', key($field_collection_item));
+//        dpm($collection->field_category->value());
+//        dpm($collection->field_ad_format->value());
+//        dpm($collection->field_campaign_type->value());
+        ?>
+        <td><?php print $collection->field_site->value()->name; ?></td>
+        <td><?php print $collection->field_supplier->value()->name; ?></td>
+        <td>category</td>
+        <td>ad</td>
+        <td>ctype</td>
+        <td><?php print $collection->field_bought_adviews->value(); ?></td>
+        <td><?php print $collection->field_cpm->value(); ?></td>
+        <td><?php print $collection->field_total_net_budget->value(); ?></td>
+      </tr>
     <?php endforeach; ?>
+    </tbody>
   </div>
 </div>
