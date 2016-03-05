@@ -73,7 +73,36 @@ function redirect_to_node_delete() {
   }
 }
 
-function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
+function _initialize_excel_writer() {
+  libraries_load('PHPExcel');
+  $objPHPExcel = new PHPExcel();
+  $objPHPExcel->setActiveSheetIndex(0);
+  $activeSheet = $objPHPExcel->getActiveSheet();
+  $allStyle = array(
+    'alignment' => array(
+      'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+    ),
+    'borders' => array(
+      'allborders' => array(
+        'style' => PHPExcel_Style_Border::BORDER_THIN,
+        'color' => ['rgb' => 'FFFFFF'],
+      ),
+    ),
+  );
+  $activeSheet->getStyle('A1:AZ200')->applyFromArray($allStyle);
+  // Set columns width
+  foreach(range('A','Z') as $columnID) {
+    $activeSheet->getColumnDimension($columnID)->setAutoSize(true);
+  }
+
+  // Set rows height
+  foreach(range(0, $max_row) as $rowID) {
+    $activeSheet->getRowDimension($rowID)->setRowHeight(25);
+  }
+  return $activeSheet;
+}
+
+function _zeddigital_set_excel_header_data(&$sheet, array &$data, $node_wrapper) {
   $data['B'][1] = 'ONLINE CAMPAIGN';
   $start_row = 3;
   $data['B'][$start_row] = 'Client:';
@@ -93,12 +122,47 @@ function _zeddigital_set_excel_header_data(array &$data, $node_wrapper) {
   return 10;
 }
 
-function _zeddigital_save_excel($data, $node_wrapper) {
-  libraries_load('PHPExcel');
-  $objPHPExcel = new PHPExcel();
-  $objPHPExcel->setActiveSheetIndex(0);
-  $activeSheet = $objPHPExcel->getActiveSheet();
+function _zeddigital_excel_set_category_header(&$sheet, array &$data, $row_num) {
+  $data['B'][$row_num] = 'Site';
+  $data['C'][$row_num] = 'Supplier';
+  $data['D'][$row_num] = 'Site category';
+  $data['E'][$row_num] = 'Ad Format';
+  $data['F'][$row_num] = 'Campaign type';
+  $data['G'][$row_num] = 'Bought Adviews';
+  $data['H'][$row_num] = 'Net Cost-Per-Thou (CPM)';
+  $data['I'][$row_num] = 'Total net budget';
+}
 
+function _zeddigital_excel_append_site(&$sheet, array &$data, $website, $row_num) {
+  $site_name = $website->field_site->label();
+  $supplier = $website->field_supplier->label();
+  $site_category = $website->field_category->label();
+  $ad_format = $website->field_ad_format->label();
+  $campaign_type = $website->field_campaign_type->label();
+  $bought_adviews = $website->field_bought_adviews->value();
+  $cpm = $website->field_cpm->value();
+  $total_net_budget = $website->field_total_net_budget->value();
+  $data['B'][$row_num] = $site_name;
+  $data['C'][$row_num] = $supplier;
+  $data['D'][$row_num] = $site_category;
+  $data['E'][$row_num] = $ad_format;
+  $data['F'][$row_num] = $campaign_type;
+  $data['G'][$row_num] = $bought_adviews;
+  $data['H'][$row_num] = $cpm;
+  $data['I'][$row_num] = $total_net_budget;
+
+  $borderStyle = array(
+    'borders' => array(
+      'allborders' => array(
+        'style' => PHPExcel_Style_Border::BORDER_MEDIUM,
+        'color' => ['rgb' => '000000'],
+      ),
+    ),
+  );
+  $sheet->getStyle('B3:D7')->applyFromArray($borderStyle);
+}
+
+function _zeddigital_save_excel(&$activeSheet, $data, $node_wrapper) {
   // Store the file in sites/default/files
   $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
   $filename = 'media_plan_' . $node_wrapper->label(). '.xls';
@@ -113,41 +177,6 @@ function _zeddigital_save_excel($data, $node_wrapper) {
       $activeSheet->SetCellValue($col.$row, $val);
     }
   }
-
-  // Set columns width
-  foreach(range('A','Z') as $columnID) {
-    $activeSheet->getColumnDimension($columnID)->setAutoSize(true);
-  }
-  $activeSheet->getColumnDimension('C')->setAutoSize(false);
-
-
-  // Set rows height
-  foreach(range(0, $max_row) as $rowID) {
-    $activeSheet->getRowDimension($rowID)->setRowHeight(25);
-  }
-
-  $allStyle = array(
-    'alignment' => array(
-      'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-    ),
-    'borders' => array(
-      'allborders' => array(
-        'style' => PHPExcel_Style_Border::BORDER_THIN,
-        'color' => ['rgb' => 'FFFFFF'],
-      ),
-    ),
-  );
-  $activeSheet->getStyle('A1:AZ200')->applyFromArray($allStyle);
-
-  $borderStyle = array(
-    'borders' => array(
-      'allborders' => array(
-        'style' => PHPExcel_Style_Border::BORDER_MEDIUM,
-        'color' => ['rgb' => '000000'],
-      ),
-    ),
-  );
-  $activeSheet->getStyle('B3:D7')->applyFromArray($borderStyle);
 
   $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
   if (file_exists($path)) {
@@ -182,23 +211,20 @@ function zeddigital_export_node_to_excel($node = NULL) {
   }
   $data = array();
   $node_wrapper = entity_metadata_wrapper('node', $node);
-  $row_num = _zeddigital_set_excel_header_data($data, $node_wrapper);
+  $sheet = _initialize_excel_writer();
+  $row_num = _zeddigital_set_excel_header_data($sheet, $data, $node_wrapper);
 
   foreach ($node_wrapper->field_categories as $category) {
+    $row_num++;
     $category_title = $category->field_category_title->label();
+    $data['B'][$row_num++] = $category_title;
+    _zeddigital_excel_set_category_header($sheet, $data, $row_num++);
     foreach ($category->field_websites as $website) {
-      $site_name = $website->field_site->label();
-      $supplier = $website->field_supplier->label();
-      $site_category = $website->field_category->label();
-      $ad_format = $website->field_ad_format->label();
-      $campaign_type = $website->field_campaign_type->label();
-      $bought_adviews = $website->field_bought_adviews->value();
-      $cpm = $website->field_cpm->value();
-      $total_net_budget = $website->field_total_net_budget->value();
+      _zeddigital_excel_append_site($sheet, $data, $website, $row_num++);
     }
   }
-
-  _zeddigital_save_excel($data, $node_wrapper);
+  _zeddigital_save_excel($sheet, $data, $node_wrapper);
+  drupal_goto('node/' . $node->nid);
 }
 
 /**
