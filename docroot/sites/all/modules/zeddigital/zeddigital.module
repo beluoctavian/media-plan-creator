@@ -1,6 +1,8 @@
 <?php
 
 define('TOTAL_NET_BUDGET_COL', 'I');
+// Replace USD with anything
+define('EXCEL_FORMAT_CURRENCY', '#,##0.00 [$USD];-#,##0.00 [$USD]');
 
 /**
  * Implements hook_menu().
@@ -16,15 +18,15 @@ function zeddigital_menu() {
       'type' => MENU_LOCAL_TASK,
       'weight' => 3,
     ),
-//    'node/%node/export_to_excel' => array(
-//      'title' => t('Export to EXCEL'),
-//      'page callback' => 'zeddigital_export_node_to_excel',
-//      'access callback' => 'zeddigital_node_export_access',
-//      'access arguments' => array($node),
-//      'callback arguments' => array($node),
-//      'type' => MENU_LOCAL_TASK,
-//      'weight' => 4,
-//    ),
+    'node/%node/export_to_excel' => array(
+      'title' => t('Export to EXCEL'),
+      'page callback' => 'zeddigital_export_node_to_excel',
+      'access callback' => 'zeddigital_node_export_access',
+      'access arguments' => array($node),
+      'callback arguments' => array($node),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 4,
+    ),
   );
 }
 
@@ -300,6 +302,9 @@ function zeddigital_export_node_to_excel($node = NULL) {
   $objPHPExcel = _initialize_excel_writer();
   $sheet = $objPHPExcel->getActiveSheet();
   $row_num = _zeddigital_set_excel_header_data($sheet, $data, $node_wrapper);
+  $first_currency = $node_wrapper->field_first_currency->label();
+  $second_currency = $node_wrapper->field_second_currency->label();
+  $exchange_rate = $node_wrapper->field_exchange_rate->value();
 
   foreach ($node_wrapper->field_categories as $category) {
     _zeddigital_excel_set_category_header($sheet, $data, $row_num, $category);
@@ -312,6 +317,7 @@ function zeddigital_export_node_to_excel($node = NULL) {
     $data['G'][$row_num] = "=SUM(G{$first_row}:G{$last_row})";
     $data[TOTAL_NET_BUDGET_COL][$row_num] = "=SUM(I{$first_row}:I{$last_row})";
     $net_budget_cells[] = TOTAL_NET_BUDGET_COL . $row_num;
+    $sheet->getStyle("I{$first_row}:I{$row_num}")->getNumberFormat()->setFormatCode(str_replace('USD', $first_currency, EXCEL_FORMAT_CURRENCY));
     _zeddigital_excel_set_cell_background($sheet, '006600', ["I{$row_num}", "G{$row_num}"], FALSE);
     $row_num += 2;
   }
