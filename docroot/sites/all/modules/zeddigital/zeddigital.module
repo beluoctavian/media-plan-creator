@@ -275,6 +275,7 @@ function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, 
   $first_currency = $node_wrapper->field_first_currency->label();
   $second_currency = $node_wrapper->field_second_currency->label();
   $exchange_rate = $node_wrapper->field_exchange_rate->value();
+  $row_num++;
   $sheet->mergeCells("B{$row_num}:E{$row_num}");
   $data['B'][$row_num] = 'BUDGET SUMMARY';
   _zeddigital_excel_set_cell_background($sheet, '006600', "B{$row_num}:E{$row_num}", TRUE);
@@ -339,6 +340,7 @@ function zeddigital_form_alter(&$form, &$form_state, $form_id) {
   switch ($form_id) {
     case 'media_plan_node_form':
       unset($form['title']);
+      unset($form['field_excel_file']);
       break;
   }
 }
