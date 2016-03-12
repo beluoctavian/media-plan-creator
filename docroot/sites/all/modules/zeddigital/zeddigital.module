@@ -145,6 +145,9 @@ function _initialize_excel_writer() {
       'type' => PHPExcel_Style_Fill::FILL_SOLID,
       'color' => array('rgb' => 'FFFFFF')
     ),
+    'font' => array(
+      'size' => '10px',
+    ),
   );
   $activeSheet->getStyle('A1:AZ200')->applyFromArray($style);
 
@@ -162,7 +165,7 @@ function _initialize_excel_writer() {
     'font'  => array(
       'bold'  => false,
       'color' => array('rgb' => '000000'),
-      'size'  => 8,
+      'size'  => '7px',
   ));
   $activeSheet->getStyle('A1:A200')->applyFromArray($style);
 
