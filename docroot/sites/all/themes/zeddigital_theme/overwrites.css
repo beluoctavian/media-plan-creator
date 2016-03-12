@@ -1,3 +1,6 @@
+input {
+    max-width: 100%;
+}
 #main-menu-container {
     background: #000;
     padding: 10px;
@@ -22,6 +25,11 @@
     text-align: right;
 }
 /* Page node-add-media-plan */
+.field-name-field-client, .field-name-field-brand, .field-name-field-campaign, .field-name-field-first-currency, .field-name-field-second-currency, .field-name-field-exchange-rate {
+    display: inline-block;
+    width: 300px;
+    margin-right: 20px;
+}
 #edit-field-period {
     width: 343px;
 }
@@ -90,6 +98,12 @@
 .field-name-field-websites input.form-submit[value="Remove"] {
     float: left;
     margin-top: 20px;
+}
+.field-name-field-notes {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0 0 10px 0;
 }
 /* End page node-add-media-plan */
 
