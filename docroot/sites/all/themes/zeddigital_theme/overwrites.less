@@ -26,11 +26,22 @@ input {
 }
 /* Page node-add/edit-media-plan */
 .page-node-edit, .page-node-add {
-
-  .field-name-field-client, .field-name-field-brand, .field-name-field-campaign, .field-name-field-first-currency, .field-name-field-second-currency, .field-name-field-exchange-rate {
+  .field-name-field-client, .field-name-field-brand, .field-name-field-campaign {
     display: inline-block;
     width: 300px;
     margin-right: 20px;
+  }
+  .field-name-field-first-currency, .field-name-field-second-currency, .field-name-field-exchange-rate,
+  .field-name-field-agency-commission, .field-name-field-vat, .field-name-field-platforms-management-fees {
+    display: inline-block;
+    width: 100px;
+    margin-right: 20px;
+    input {
+      width: 100%;
+    }
+    input.autocomplete-deluxe-form {
+      width: 70%;
+    }
   }
   #edit-field-period {
     width: 343px;

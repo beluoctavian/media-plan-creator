@@ -22,22 +22,60 @@ input {
 .submitted {
   text-align: right;
 }
-/* Page node-add-media-plan */
+/* Page node-add/edit-media-plan */
 .page-node-edit .field-name-field-client,
 .page-node-add .field-name-field-client,
 .page-node-edit .field-name-field-brand,
 .page-node-add .field-name-field-brand,
 .page-node-edit .field-name-field-campaign,
-.page-node-add .field-name-field-campaign,
+.page-node-add .field-name-field-campaign {
+  display: inline-block;
+  width: 300px;
+  margin-right: 20px;
+}
 .page-node-edit .field-name-field-first-currency,
 .page-node-add .field-name-field-first-currency,
 .page-node-edit .field-name-field-second-currency,
 .page-node-add .field-name-field-second-currency,
 .page-node-edit .field-name-field-exchange-rate,
-.page-node-add .field-name-field-exchange-rate {
+.page-node-add .field-name-field-exchange-rate,
+.page-node-edit .field-name-field-agency-commission,
+.page-node-add .field-name-field-agency-commission,
+.page-node-edit .field-name-field-vat,
+.page-node-add .field-name-field-vat,
+.page-node-edit .field-name-field-platforms-management-fees,
+.page-node-add .field-name-field-platforms-management-fees {
   display: inline-block;
-  width: 300px;
+  width: 130px;
   margin-right: 20px;
+}
+.page-node-edit .field-name-field-first-currency input,
+.page-node-add .field-name-field-first-currency input,
+.page-node-edit .field-name-field-second-currency input,
+.page-node-add .field-name-field-second-currency input,
+.page-node-edit .field-name-field-exchange-rate input,
+.page-node-add .field-name-field-exchange-rate input,
+.page-node-edit .field-name-field-agency-commission input,
+.page-node-add .field-name-field-agency-commission input,
+.page-node-edit .field-name-field-vat input,
+.page-node-add .field-name-field-vat input,
+.page-node-edit .field-name-field-platforms-management-fees input,
+.page-node-add .field-name-field-platforms-management-fees input {
+  width: 100%;
+}
+.page-node-edit .field-name-field-first-currency input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-first-currency input.autocomplete-deluxe-form,
+.page-node-edit .field-name-field-second-currency input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-second-currency input.autocomplete-deluxe-form,
+.page-node-edit .field-name-field-exchange-rate input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-exchange-rate input.autocomplete-deluxe-form,
+.page-node-edit .field-name-field-agency-commission input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-agency-commission input.autocomplete-deluxe-form,
+.page-node-edit .field-name-field-vat input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-vat input.autocomplete-deluxe-form,
+.page-node-edit .field-name-field-platforms-management-fees input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-platforms-management-fees input.autocomplete-deluxe-form {
+  width: 70%;
 }
 .page-node-edit #edit-field-period,
 .page-node-add #edit-field-period {
