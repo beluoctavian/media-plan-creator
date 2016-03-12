@@ -271,7 +271,7 @@ function _zeddigital_excel_append_site(&$sheet, array &$data, &$row_num, $websit
   $row_num++;
 }
 
-function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, &$row_num, $node_wrapper) {
+function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, array $commission_charged_cells, &$row_num, $node_wrapper) {
   $first_currency = $node_wrapper->field_first_currency->label();
   $second_currency = $node_wrapper->field_second_currency->label();
   $exchange_rate = $node_wrapper->field_exchange_rate->value();
@@ -292,8 +292,9 @@ function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, 
   $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
   $row_num++;
 
+  $commission = implode('+', $commission_charged_cells);
   $data['B'][$row_num] = 'Agency commission';
-  $data['D'][$row_num] = "=D" . ($row_num-1) . " * {$agency_commission}";
+  $data['D'][$row_num] = "=({$commission}) * {$agency_commission}";
   $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
   $row_num++;
 
@@ -334,15 +335,16 @@ function zeddigital_export_node_to_excel($node = NULL) {
   }
   $data = [];
   $net_budget_cells = [];
+  $commission_charged_cells = [];
   $node_wrapper = entity_metadata_wrapper('node', $node);
   $objPHPExcel = _initialize_excel_writer();
   $sheet = $objPHPExcel->getActiveSheet();
   $row_num = _zeddigital_set_excel_header_data($sheet, $data, $node_wrapper);
   $first_currency = $node_wrapper->field_first_currency->label();
-  $second_currency = $node_wrapper->field_second_currency->label();
-  $exchange_rate = $node_wrapper->field_exchange_rate->value();
+  $agency_commission = $node_wrapper->field_agency_commission->value();
 
   foreach ($node_wrapper->field_categories as $category) {
+    $commission_is_charged = $category->field_commission_is_charged->value();
     _zeddigital_excel_set_category_header($sheet, $data, $row_num, $category);
     $first_row = $row_num;
     foreach ($category->field_websites as $website) {
@@ -353,11 +355,14 @@ function zeddigital_export_node_to_excel($node = NULL) {
     $data['G'][$row_num] = "=SUM(G{$first_row}:G{$last_row})";
     $data[TOTAL_NET_BUDGET_COL][$row_num] = "=SUM(I{$first_row}:I{$last_row})";
     $net_budget_cells[] = TOTAL_NET_BUDGET_COL . $row_num;
+    if ($commission_is_charged) {
+      $commission_charged_cells[] = TOTAL_NET_BUDGET_COL . $row_num;
+    }
     $sheet->getStyle("I{$first_row}:I{$row_num}")->getNumberFormat()->setFormatCode(str_replace('USD', $first_currency, EXCEL_FORMAT_CURRENCY));
     _zeddigital_excel_set_cell_background($sheet, '006600', ["I{$row_num}", "G{$row_num}"], FALSE);
     $row_num += 2;
   }
-  _zeddigital_excel_budget_summary($sheet, $data, $net_budget_cells, $row_num, $node_wrapper);
+  _zeddigital_excel_budget_summary($sheet, $data, $net_budget_cells, $commission_charged_cells, $row_num, $node_wrapper);
   _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper);
   drupal_goto('node/' . $node->nid);
 }
