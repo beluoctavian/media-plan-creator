@@ -275,6 +275,9 @@ function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, 
   $first_currency = $node_wrapper->field_first_currency->label();
   $second_currency = $node_wrapper->field_second_currency->label();
   $exchange_rate = $node_wrapper->field_exchange_rate->value();
+  $agency_commission = $node_wrapper->field_agency_commission->value();
+  $vat = $node_wrapper->field_vat->value();
+  $fees = $node_wrapper->field_platforms_management_fees->value();
   $row_num++;
   $sheet->mergeCells("B{$row_num}:E{$row_num}");
   $data['B'][$row_num] = 'BUDGET SUMMARY';
@@ -287,9 +290,35 @@ function _zeddigital_excel_budget_summary(&$sheet, &$data, array $budget_cells, 
   $data['B'][$row_num] = 'Net Media Budget';
   $data['D'][$row_num] = '=' . implode('+', $budget_cells);
   $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
-  $sheet->getStyle("D{$row_num}")->getNumberFormat()->setFormatCode(str_replace('USD', $first_currency, EXCEL_FORMAT_CURRENCY));
-  $sheet->getStyle("E{$row_num}")->getNumberFormat()->setFormatCode(str_replace('USD', $second_currency, EXCEL_FORMAT_CURRENCY));
-//  _zeddigital_excel_set_cell_background($sheet, '006600', "B{$row_num}:E{$row_num}", FALSE);
+  $row_num++;
+
+  $data['B'][$row_num] = 'Agency commission';
+  $data['D'][$row_num] = "=D" . ($row_num-1) . " * {$agency_commission}";
+  $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
+  $row_num++;
+
+  $data['B'][$row_num] = 'Platforms management Fees';
+  $data['D'][$row_num] = $fees;
+  $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
+  $row_num++;
+
+  $data['B'][$row_num] = 'TOTAL NET CLIENT COST';
+  $data['D'][$row_num] = "=SUM(D{$start_row}:D" . ($row_num-1) . ")";
+  $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
+  $row_num++;
+
+  $data['B'][$row_num] = 'VAT';
+  $data['D'][$row_num] = "=D" . ($row_num-1) . " * {$vat}";
+  $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
+  $row_num++;
+
+  $data['B'][$row_num] = 'TOTAL BUDGET (INCLUDING VAT)';
+  $data['D'][$row_num] = "=D" . ($row_num-2) . " + " . ($row_num-1);
+  $data['E'][$row_num] = "=D{$row_num}/{$exchange_rate}";
+
+  $sheet->getStyle("D{$start_row}:D{$row_num}")->getNumberFormat()->setFormatCode(str_replace('USD', $first_currency, EXCEL_FORMAT_CURRENCY));
+  $sheet->getStyle("E{$start_row}:E{$row_num}")->getNumberFormat()->setFormatCode(str_replace('USD', $second_currency, EXCEL_FORMAT_CURRENCY));
+  _zeddigital_excel_set_cell_background($sheet, '006600', "B" . ($row_num-2) . ":E{$row_num}", FALSE);
   _zeddigital_excel_set_boder($sheet, "B{$start_row}:E{$row_num}");
 }
 

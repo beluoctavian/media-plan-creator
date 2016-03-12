@@ -67,14 +67,14 @@ $term_ref_fields = [
           }
         }
         ?>
-        <td><?php print $collection->field_site->value()->name; ?></td>
-        <td><?php print $collection->field_supplier->value()->name; ?></td>
+        <td><?php print !empty($collection->field_site->value()) ? $collection->field_site->value()->name : ''; ?></td>
+        <td><?php print !empty($collection->field_supplier->value()) ? $collection->field_supplier->value()->name : ''; ?></td>
         <td><?php print implode(', ', $field_category); ?></td>
         <td><?php print implode(', ', $field_ad_format); ?></td>
         <td><?php print implode(', ', $field_campaign_type); ?></td>
-        <td><?php print $collection->field_bought_adviews->value(); ?></td>
-        <td><?php print $collection->field_cpm->value(); ?></td>
-        <td><?php print $collection->field_total_net_budget->value(); ?></td>
+        <td><?php print !empty($collection->field_bought_adviews->value()) ? $collection->field_bought_adviews->value() : ''; ?></td>
+        <td><?php print !empty($collection->field_cpm->value()) ? $collection->field_cpm->value() : ''; ?></td>
+        <td><?php print !empty($collection->field_total_net_budget->value()) ? $collection->field_total_net_budget->value() : ''; ?></td>
       </tr>
     <?php endforeach; ?>
     </tbody>
