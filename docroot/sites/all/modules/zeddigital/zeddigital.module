@@ -209,6 +209,17 @@ function _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper) {
   }
 }
 
+function _zeddigital_set_excel_logo(&$sheet) {
+  $objDrawing = new PHPExcel_Worksheet_Drawing();
+  $objDrawing->setName('Logo');
+  $objDrawing->setDescription('Logo');
+  $logo = drupal_get_path('theme', 'zeddigital_theme') . '/zeddigital_images/logo.png';
+  $objDrawing->setPath($logo);
+  $objDrawing->setCoordinates('H3');
+  $objDrawing->setHeight(75); // logo height
+  $objDrawing->setWorksheet($sheet);
+}
+
 function _zeddigital_set_excel_header_data(&$sheet, array &$data, $node_wrapper) {
   $data['B'][1] = 'ONLINE CAMPAIGN';
   $start_row = $row = 3;
@@ -229,6 +240,7 @@ function _zeddigital_set_excel_header_data(&$sheet, array &$data, $node_wrapper)
     $data[$second_col][$row] = $start_date . $end_date;
   }
   _zeddigital_excel_set_boder($sheet, "{$first_col}{$start_row}:{$second_col}{$row}");
+  _zeddigital_set_excel_logo($sheet);
   return 11;
 }
 
