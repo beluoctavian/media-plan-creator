@@ -1,127 +1,154 @@
 input {
-    max-width: 100%;
+  max-width: 100%;
 }
 #main-menu-container {
-    background: #000;
-    padding: 10px;
+  background: #000;
+  padding: 10px;
 }
 #main-menu-container a {
-    color: #fff;
-    font-size: 1em;
-    text-decoration: none;
-    padding: 2px 10px;
-    border-radius: 10px;
+  color: #fff;
+  font-size: 1em;
+  text-decoration: none;
+  padding: 2px 10px;
+  border-radius: 10px;
 }
 #main-menu-container li {
-    display: inline-block;
-    padding: 0;
+  display: inline-block;
+  padding: 0;
 }
-
 #main-menu-container li a:hover {
-    background: #444;
+  background: #444;
 }
-
 .submitted {
-    text-align: right;
+  text-align: right;
 }
 /* Page node-add-media-plan */
-.field-name-field-client, .field-name-field-brand, .field-name-field-campaign, .field-name-field-first-currency, .field-name-field-second-currency, .field-name-field-exchange-rate {
-    display: inline-block;
-    width: 300px;
-    margin-right: 20px;
+.page-node-edit .field-name-field-client,
+.page-node-add .field-name-field-client,
+.page-node-edit .field-name-field-brand,
+.page-node-add .field-name-field-brand,
+.page-node-edit .field-name-field-campaign,
+.page-node-add .field-name-field-campaign,
+.page-node-edit .field-name-field-first-currency,
+.page-node-add .field-name-field-first-currency,
+.page-node-edit .field-name-field-second-currency,
+.page-node-add .field-name-field-second-currency,
+.page-node-edit .field-name-field-exchange-rate,
+.page-node-add .field-name-field-exchange-rate {
+  display: inline-block;
+  width: 300px;
+  margin-right: 20px;
 }
-#edit-field-period {
-    width: 343px;
+.page-node-edit #edit-field-period,
+.page-node-add #edit-field-period {
+  width: 343px;
 }
-#edit-field-period input {
-    width: 100px;
+.page-node-edit #edit-field-period input,
+.page-node-add #edit-field-period input {
+  width: 100px;
 }
-#edit-field-period .fieldset-wrapper {
-    padding-bottom: 0;
+.page-node-edit #edit-field-period .fieldset-wrapper,
+.page-node-add #edit-field-period .fieldset-wrapper {
+  padding-bottom: 0;
 }
-#edit-field-period .container-inline-date {
-    display: inline-block;
-    width: auto;
+.page-node-edit #edit-field-period .container-inline-date,
+.page-node-add #edit-field-period .container-inline-date {
+  display: inline-block;
+  width: auto;
 }
-#edit-field-period #edit-field-period-und-0-value2::before {
-    content: ">";
-    float: left;
-    margin-top: 25px;
-    margin-right: 30px;
+.page-node-edit #edit-field-period #edit-field-period-und-0-value2::before,
+.page-node-add #edit-field-period #edit-field-period-und-0-value2::before {
+  content: ">";
+  float: left;
+  margin-top: 25px;
+  margin-right: 30px;
 }
-#edit-field-period .form-type-date-popup > label{
-    display: none;
+.page-node-edit #edit-field-period .form-type-date-popup > label,
+.page-node-add #edit-field-period .form-type-date-popup > label {
+  display: none;
 }
-.field-name-field-websites div[class^="field-name-field"],
-.field-name-field-websites div[class*=" field-name-field"] {
-    float: left;
-    height: 50px;
-    margin-right: 10px;
+.page-node-edit .field-name-field-websites div[class^="field-name-field"],
+.page-node-add .field-name-field-websites div[class^="field-name-field"],
+.page-node-edit .field-name-field-websites div[class*=" field-name-field"],
+.page-node-add .field-name-field-websites div[class*=" field-name-field"] {
+  float: left;
+  height: 50px;
+  margin-right: 10px;
 }
-.field-multiple-table th.field-label {
-    padding-left: 5px;
+.page-node-edit .field-multiple-table th.field-label,
+.page-node-add .field-multiple-table th.field-label {
+  padding-left: 5px;
 }
-.field-name-field-websites .autocomplete-deluxe-container {
-    min-width: 250px;
+.page-node-edit .field-name-field-websites .autocomplete-deluxe-container,
+.page-node-add .field-name-field-websites .autocomplete-deluxe-container {
+  min-width: 250px;
 }
-.field-name-field-websites .autocomplete-deluxe-multiple {
-    width: auto;
-    height: 19px!important;
-    padding: 3px 0;
+.page-node-edit .field-name-field-websites .autocomplete-deluxe-multiple,
+.page-node-add .field-name-field-websites .autocomplete-deluxe-multiple {
+  width: auto;
+  height: 19px!important;
+  padding: 3px 0;
 }
-.field-name-field-websites .field-name-field-total-net-budget input {
-    background-color: #d7d7d7;
+.page-node-edit .field-name-field-websites .field-name-field-total-net-budget input,
+.page-node-add .field-name-field-websites .field-name-field-total-net-budget input {
+  background-color: #d7d7d7;
 }
-.field-name-field-websites input {
-    box-sizing: border-box;
+.page-node-edit .field-name-field-websites input,
+.page-node-add .field-name-field-websites input {
+  box-sizing: border-box;
 }
-.field-name-field-websites input.autocomplete-deluxe-form {
-    max-width: 230px;
-    padding: 5px 5px;
+.page-node-edit .field-name-field-websites input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-websites input.autocomplete-deluxe-form {
+  max-width: 230px;
+  padding: 5px 5px;
 }
-.field-name-field-websites .autocomplete-deluxe-multiple input.autocomplete-deluxe-form {
-    margin-left: 0;
+.page-node-edit .field-name-field-websites .autocomplete-deluxe-multiple input.autocomplete-deluxe-form,
+.page-node-add .field-name-field-websites .autocomplete-deluxe-multiple input.autocomplete-deluxe-form {
+  margin-left: 0;
 }
-.field-name-field-websites .autocomplete-deluxe-item {
-    margin: 0 3px 0 0;
-    padding-top: 2px;
-    padding-bottom: 2px;
+.page-node-edit .field-name-field-websites .autocomplete-deluxe-item,
+.page-node-add .field-name-field-websites .autocomplete-deluxe-item {
+  margin: 0 3px 0 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
-.field-name-field-websites div.autocomplete-deluxe-throbber {
-    width: 20px;
-    height: auto;
+.page-node-edit .field-name-field-websites div.autocomplete-deluxe-throbber,
+.page-node-add .field-name-field-websites div.autocomplete-deluxe-throbber {
+  width: 20px;
+  height: auto;
 }
-.field-name-field-websites .form-type-textfield input {
-    width: 110px;
-    height: 27px;
+.page-node-edit .field-name-field-websites .form-type-textfield input,
+.page-node-add .field-name-field-websites .form-type-textfield input {
+  width: 110px;
+  height: 27px;
 }
-.field-name-field-websites input.form-submit[value="Remove"] {
-    float: left;
-    margin-top: 20px;
+.page-node-edit .field-name-field-websites input.form-submit[value="Remove"],
+.page-node-add .field-name-field-websites input.form-submit[value="Remove"] {
+  float: left;
+  margin-top: 20px;
 }
-.field-name-field-notes {
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin: 0 0 10px 0;
+.page-node-edit .field-name-field-notes,
+.page-node-add .field-name-field-notes {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 10px 0;
 }
 /* End page node-add-media-plan */
-
-
 /* Start page-node node-type-media-plan */
 .category-main-title th {
-    background-color: #000000;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 15px;
-    border-color: #000000;
+  background-color: #000000;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 15px;
+  border-color: #000000;
 }
 .category-table-header th {
-    background-color: #006600;
-    color: #FFFFFF;
-    border-color: #000000;
+  background-color: #006600;
+  color: #FFFFFF;
+  border-color: #000000;
 }
 .media-plan-category tbody td {
-    border: 1px solid #bebfb9;
+  border: 1px solid #bebfb9;
 }
 /* End page-node node-type-media-plan */
