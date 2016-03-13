@@ -177,9 +177,9 @@ function _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper) {
 
   // Store the file in sites/default/files
   $dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
-  $filename = 'media_plan_' . $node_wrapper->label(). '.xls';
-  $file_path = "media_plans/$filename";
-  $path = "$dir/$file_path";
+  $filename = 'media_plan_' . $node_wrapper->label() . '.xls';
+  $path = "{$dir}/media_plans/excel_export/{$filename}";
+  $tmp_path = "{$dir}/media_plans/excel_export/tmp/{$filename}";
 
   $max_row = 0;
 
@@ -190,23 +190,25 @@ function _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper) {
     }
   }
 
-  $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-  $objWriter->setPreCalculateFormulas(true);
-  if (file_exists($path)) {
+  if(file_exists($path)) {
     unlink($path);
   }
+  $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+  $objWriter->setPreCalculateFormulas(true);
   $objWriter->save($path);
   $old_drupal_file = $node_wrapper->field_excel_file->value();
-  $file = (object) [
-    'uid' => 1,
-    'uri' => $path,
-    'status' => 1,
-    'display' => 1,
-    'filename' => $filename,
-    'filemime' => file_get_mimetype($path),
-  ];
-  $drupal_file = file_move($file, 'public://media_plans/excel_export/', FILE_EXISTS_REPLACE);
   if (empty($old_drupal_file)) {
+    // Only God and I know why this needs to be done
+    rename($path, $tmp_path);
+    $file = (object) [
+      'uid' => 1,
+      'uri' => $tmp_path,
+      'status' => 1,
+      'display' => 1,
+      'filename' => 'media_plan_' . $node_wrapper->label() . '.xls',
+      'filemime' => file_get_mimetype($tmp_path),
+    ];
+    $drupal_file = file_move($file, 'public://media_plans/excel_export/', FILE_EXISTS_REPLACE);
     $node_wrapper->field_excel_file->set((array)$drupal_file);
     $node_wrapper->save();
   }
@@ -356,7 +358,6 @@ function zeddigital_export_node_to_excel($node = NULL) {
   $sheet = $objPHPExcel->getActiveSheet();
   $row_num = _zeddigital_set_excel_header_data($sheet, $data, $node_wrapper);
   $first_currency = $node_wrapper->field_first_currency->label();
-  $agency_commission = $node_wrapper->field_agency_commission->value();
 
   foreach ($node_wrapper->field_categories as $category) {
     $commission_is_charged = $category->field_commission_is_charged->value();
