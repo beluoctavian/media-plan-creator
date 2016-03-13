@@ -436,7 +436,13 @@ function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
  */
 function zeddigital_node_update($node) {
   if ($node->type == 'media_plan') {
-    zeddigital_export_node_to_excel($node);
+    try {
+      zeddigital_export_node_to_excel($node);
+    }
+    catch (Exception $e) {
+      watchdog_exception('excel_explort', $e);
+      drupal_set_message('An error occured when exporting the excel file.', 'error');
+    }
   }
 }
 
@@ -445,7 +451,13 @@ function zeddigital_node_update($node) {
  */
 function zeddigital_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'media_plan' && empty($node->field_excel_file)) {
-    zeddigital_export_node_to_excel($node);
+    try {
+      zeddigital_export_node_to_excel($node);
+    }
+    catch (Exception $e) {
+      watchdog_exception('excel_explort', $e);
+      drupal_set_message('An error occured when exporting the excel file.', 'error');
+    }
   }
 }
 
