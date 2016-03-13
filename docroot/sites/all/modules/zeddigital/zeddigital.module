@@ -9,24 +9,24 @@ define('EXCEL_FORMAT_CURRENCY', '#,##0.00 [$USD];-#,##0.00 [$USD]');
  */
 function zeddigital_menu() {
   return array(
-    'node/%node/delete_programmatically' => array(
+    'node/%/delete_programmatically' => array(
       'title' => t('Delete'),
       'page callback' => 'redirect_to_node_delete',
       'access callback' => 'zeddigital_node_delete_access',
-      'access arguments' => array($node),
-      'callback arguments' => array($node),
+      'access arguments' => array(1),
+      'callback arguments' => array(1),
       'type' => MENU_LOCAL_TASK,
       'weight' => 3,
     ),
-    'node/%node/export_to_excel' => array(
-      'title' => t('Export to EXCEL'),
-      'page callback' => 'zeddigital_export_node_to_excel',
-      'access callback' => 'zeddigital_node_export_access',
-      'access arguments' => array($node),
-      'callback arguments' => array($node),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 4,
-    ),
+//    'node/%/export_to_excel' => array(
+//      'title' => t('Export to EXCEL'),
+//      'page callback' => 'zeddigital_export_node_to_excel',
+//      'access callback' => 'zeddigital_node_export_access',
+//      'access arguments' => array(1),
+//      'callback arguments' => array(1),
+//      'type' => MENU_LOCAL_TASK,
+//      'weight' => 4,
+//    ),
   );
 }
 
