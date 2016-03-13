@@ -190,3 +190,8 @@ input {
   border: 1px solid #bebfb9;
 }
 /* End page-node node-type-media-plan */
+/* Start page front */
+body.front .views-exposed-widget {
+  width: 150px;
+}
+/* Endpage front */
