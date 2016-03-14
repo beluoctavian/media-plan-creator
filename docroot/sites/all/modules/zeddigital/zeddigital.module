@@ -495,6 +495,12 @@ function zeddigital_taxonomy_term_insert($term) {
 function zeddigital_views_query_alter(&$view, &$query) {
   global $user;
   if ($view->name == 'media_plans' && in_array('supplier', $user->roles)) {
+    foreach ($query->where[1]['conditions'] as &$condition) {
+      if ($condition['field'] == 'field_data_field_linked_suppliers_users.field_linked_suppliers_users_value') {
+        $condition['value'] = $user->uid;
+        $condition['operator'] = '=';
+      }
+    }
   }
 }
 
@@ -510,7 +516,11 @@ function computed_field_field_linked_suppliers_users_compute(&$entity_field, $en
     }
   }
   $suppliers = array_unique($suppliers);
-  foreach ($suppliers as $key => $s) {
-    $entity_field[$key] = ['value' => $s];
+  $q = db_select('users','u')
+    ->fields('u', ['uid'])
+    ->condition('name', $suppliers, 'IN');
+  $uids = $q->execute()->fetchCol();
+  foreach ($uids as $key => $u) {
+    $entity_field[$key] = ['value' => $u];
   }
 }
