@@ -488,3 +488,29 @@ function zeddigital_taxonomy_term_insert($term) {
     }
   }
 }
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function zeddigital_views_query_alter(&$view, &$query) {
+  global $user;
+  if ($view->name == 'media_plans' && in_array('supplier', $user->roles)) {
+  }
+}
+
+function computed_field_field_linked_suppliers_users_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
+  $entity_field = [];
+  $node_wrapper = entity_metadata_wrapper('node', $entity);
+  $suppliers = [];
+  foreach ($node_wrapper->field_categories as $category){
+    foreach ($category->field_websites as $website) {
+      if (!empty($website->field_supplier->value())) {
+        $suppliers[] = $website->field_supplier->value()->name;
+      }
+    }
+  }
+  $suppliers = array_unique($suppliers);
+  foreach ($suppliers as $key => $s) {
+    $entity_field[$key] = ['value' => $s];
+  }
+}
