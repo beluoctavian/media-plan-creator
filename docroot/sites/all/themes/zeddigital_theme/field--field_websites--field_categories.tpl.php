@@ -43,6 +43,8 @@
  *
  * @ingroup themeable
  */
+global $user;
+$user_is_supplier = in_array('supplier', $user->roles) ? TRUE : FALSE;
 $term_ref_fields = [
   'field_category',
   'field_ad_format',
@@ -64,6 +66,15 @@ $term_ref_fields = [
           ${$field} = [];
           foreach ($collection->{$field}->value() as $term) {
             ${$field}[] = $term->name;
+          }
+        }
+        ?>
+        <?php
+        if ($user_is_supplier) {
+          // Do not show suppliers other websites than theirs
+          $supplier = $collection->field_supplier->value();
+          if (empty($supplier) || $supplier->name != $user->name) {
+            continue;
           }
         }
         ?>
