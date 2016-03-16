@@ -19,8 +19,17 @@ input {
 #main-menu-container li a:hover {
   background: #444;
 }
-.submitted {
+body.node-type-media-plan #content .content {
+  position: relative;
+}
+body.node-type-media-plan .submitted {
+  position: absolute;
+  top: 9px;
+  right: 0;
   text-align: right;
+}
+body.node-type-media-plan .form-item.form-type-item {
+  color: #898989;
 }
 /* Page node-add/edit-media-plan */
 .page-node-edit .field-name-field-client,
