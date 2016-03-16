@@ -441,7 +441,7 @@ function zeddigital_node_update($node) {
     }
     catch (Exception $e) {
       watchdog_exception('excel_explort', $e);
-      drupal_set_message('An error occured when exporting the excel file.', 'error');
+//      drupal_set_message('An error occured when exporting the excel file.', 'error');
     }
   }
 }
@@ -456,7 +456,7 @@ function zeddigital_node_view($node, $view_mode, $langcode) {
     }
     catch (Exception $e) {
       watchdog_exception('excel_explort', $e);
-      drupal_set_message('An error occured when exporting the excel file.', 'error');
+//      drupal_set_message('An error occured when exporting the excel file.', 'error');
     }
   }
 }
@@ -516,11 +516,13 @@ function computed_field_field_linked_suppliers_users_compute(&$entity_field, $en
     }
   }
   $suppliers = array_unique($suppliers);
-  $q = db_select('users','u')
-    ->fields('u', ['uid'])
-    ->condition('name', $suppliers, 'IN');
-  $uids = $q->execute()->fetchCol();
-  foreach ($uids as $key => $u) {
-    $entity_field[$key] = ['value' => $u];
+  if (!empty($suppliers)) {
+    $q = db_select('users','u')
+      ->fields('u', ['uid'])
+      ->condition('name', $suppliers, 'IN');
+    $uids = $q->execute()->fetchCol();
+    foreach ($uids as $key => $u) {
+      $entity_field[$key] = ['value' => $u];
+    }
   }
 }
