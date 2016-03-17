@@ -674,6 +674,9 @@ class GdeApiController {
       drupal_set_message("Error creating the campaign in GDE api: {$xml->status}", 'error');
       return FALSE;
     }
+
+    //Campaign created succesfully.
+    return TRUE;
   }
 
 }
