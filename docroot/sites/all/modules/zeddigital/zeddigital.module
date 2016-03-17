@@ -3,6 +3,8 @@
 define('TOTAL_NET_BUDGET_COL', 'I');
 // Replace USD with anything
 define('EXCEL_FORMAT_CURRENCY', '#,##0.00 [$USD];-#,##0.00 [$USD]');
+define('ZEDDIGITAL_WORKFLOW_PROGRESS_SID', '2');
+define('ZEDDIGITAL_WORKFLOW_DONE_SID', '3');
 
 /**
  * Implements hook_menu().
@@ -525,4 +527,74 @@ function computed_field_field_linked_suppliers_users_compute(&$entity_field, $en
       $entity_field[$key] = ['value' => $u];
     }
   }
+}
+
+/**
+ * Implements hook_workflow().
+ */
+function zeddigital_workflow($op, $id, $new_sid, $entity, $force, $entity_type = '', $field_name = '', $transition = NULL, $user = NULL) {
+  if ($op == 'transition post' && !empty($entity) && $entity->type == 'media_plan'
+    && $id == ZEDDIGITAL_WORKFLOW_PROGRESS_SID && $new_sid == ZEDDIGITAL_WORKFLOW_DONE_SID) {
+    try {
+      zeddigital_send_media_plan_to_api($entity);
+      drupal_set_message('The media plan was succesfully registered!', 'status');
+    }
+    catch (Exception $e) {
+      watchdog_exception('gde-api', $e);
+      drupal_set_message('An error occured. The media plan was not registered.', 'error');
+    }
+  }
+}
+
+/**
+ * Register the media plan with
+ *
+ * @param $entity
+ */
+function zeddigital_send_media_plan_to_api($entity) {
+  $apiController = new GdeApiController();
+}
+
+class GdeApiController {
+  private $api_url;
+  private $username;
+  private $password;
+  private $sessionID = NULL;
+
+  public function __construct() {
+    $this->api_url = 'http://gdeapi.gemius.com';
+    $this->username = 'zenith_test_ro';
+    $this->password = 'mBo$$555';
+    $this->openSession();
+  }
+
+  public function __destruct() {
+    $this->closeSession();
+  }
+
+  private function openSession() {
+    $login_url = "{$this->api_url}/OpenSession.php?login={$this->username}&passwd={$this->password}";
+    $xml = simplexml_load_file($login_url);
+    if ($xml->status == 'OK') {
+      $this->sessionID = $xml->sessionID;
+      drupal_set_message("Session opened: {$this->sessionID}", 'status');
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  private function closeSession() {
+    if ($this->sessionID === NULL) {
+      return FALSE;
+    }
+    $logout_url = "{$this->api_url}/CloseSession.php?sessionID={$this->sessionID}";
+    $xml = simplexml_load_file($logout_url);
+    if ($xml->status == 'OK') {
+      drupal_set_message("Session destroyed: {$this->sessionID}", 'status');
+      $this->sessionID = NULL;
+      return TRUE;
+    }
+    return FALSE;
+  }
+
 }
