@@ -556,6 +556,9 @@ function zeddigital_send_media_plan_to_api($entity) {
 }
 
 class GdeApiController {
+
+  const STATUS_OK = 'OK';
+
   private $api_url;
   private $username;
   private $password;
@@ -575,12 +578,18 @@ class GdeApiController {
   private function openSession() {
     $login_url = "{$this->api_url}/OpenSession.php?login={$this->username}&passwd={$this->password}";
     $xml = simplexml_load_file($login_url);
-    if ($xml->status == 'OK') {
+    if ($xml->status == self::STATUS_OK) {
       $this->sessionID = $xml->sessionID;
       drupal_set_message("Session opened: {$this->sessionID}", 'status');
       return TRUE;
     }
     return FALSE;
+  }
+
+  private function ping() {
+    $ping_url = "{$this->api_url}/Ping.php?sessionID={$this->sessionID}";
+    $xml = simplexml_load_file($ping_url);
+    return $xml->status == self::STATUS_OK;
   }
 
   private function closeSession() {
@@ -589,7 +598,7 @@ class GdeApiController {
     }
     $logout_url = "{$this->api_url}/CloseSession.php?sessionID={$this->sessionID}";
     $xml = simplexml_load_file($logout_url);
-    if ($xml->status == 'OK') {
+    if ($xml->status == self::STATUS_OK) {
       drupal_set_message("Session destroyed: {$this->sessionID}", 'status');
       $this->sessionID = NULL;
       return TRUE;
