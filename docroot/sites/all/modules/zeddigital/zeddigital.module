@@ -537,7 +537,6 @@ function zeddigital_workflow($op, $id, $new_sid, $entity, $force, $entity_type =
     && $id == ZEDDIGITAL_WORKFLOW_PROGRESS_SID && $new_sid == ZEDDIGITAL_WORKFLOW_DONE_SID) {
     try {
       zeddigital_send_media_plan_to_api($entity);
-      drupal_set_message('The media plan was succesfully registered!', 'status');
     }
     catch (Exception $e) {
       watchdog_exception('gde-api', $e);
@@ -553,7 +552,9 @@ function zeddigital_workflow($op, $id, $new_sid, $entity, $force, $entity_type =
  */
 function zeddigital_send_media_plan_to_api($entity) {
   $apiController = new GdeApiController($entity);
-  $apiController->createCampaign();
+  if ($apiController->createCampaign() == TRUE) {
+    drupal_set_message('The media plan was succesfully registered!', 'status');
+  }
 }
 
 class GdeApiController {
@@ -637,6 +638,15 @@ class GdeApiController {
   }
 
   public function createCampaign() {
+    $brand = $this->nodeWrapper->field_brand->value();
+    $clientID = $brand->field_client_id;
+    if (empty($clientID)) {
+      drupal_set_message("The client id for '{$brand->name}' brand was not set. Please contact an administrator.", 'error');
+      return FALSE;
+    }
+    else {
+      $clientID = $clientID[LANGUAGE_NONE][0]['value'];
+    }
     if (!$this->ping()) {
       return FALSE;
     }
@@ -649,19 +659,18 @@ class GdeApiController {
     }
     $user_info = $this->getUserInfo();
     $params = [
+      'clientID' => $clientID,
       'name' => $campaign_name,
       'startTS' => $start_date,
       'endTS' => $end_date,
       'costCurrency' => 'RON',
       'countryID' => $user_info['countryID'],
       'timeZoneID' => $user_info['timeZoneID'],
-      'clientID' => $user_info['userID'],
     ];
     $create_campaign_url = $this->addParamsToUrl($create_campaign_url, $params);
 
     $xml = simplexml_load_file($create_campaign_url);
     if ($xml->status != self::STATUS_OK) {
-      dpm($create_campaign_url);
       drupal_set_message("Error creating the campaign in GDE api: {$xml->status}", 'error');
       return FALSE;
     }
