@@ -672,6 +672,9 @@ class GdeApiController {
     $xml = simplexml_load_file($create_campaign_url);
     if ($xml->status != self::STATUS_OK) {
       drupal_set_message("Error creating the campaign in GDE api: {$xml->status}", 'error');
+      if (!empty($xml->errorDescription)) {
+        drupal_set_message((string) $xml->errorDescription, 'error');
+      }
       return FALSE;
     }
 
