@@ -678,8 +678,15 @@ class GdeApiController {
       return FALSE;
     }
 
+    $this->saveCampaignData($xml->campaigns->campaign);
+
     //Campaign created succesfully.
     return TRUE;
   }
 
+  private function saveCampaignData($campaign) {
+    $this->nodeWrapper->field_cd_campaignid->set((string) $campaign->campaignID);
+    $this->nodeWrapper->field_cd_clientid->set((string) $campaign->clientID);
+    $this->nodeWrapper->field_cd_rootplacementid->set((string) $campaign->rootPlacementID);
+  }
 }
