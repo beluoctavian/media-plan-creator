@@ -393,6 +393,9 @@ function zeddigital_form_alter(&$form, &$form_state, $form_id) {
     case 'media_plan_node_form':
       unset($form['title']);
       unset($form['field_excel_file']);
+      unset($form['field_cd_campaignid']);
+      unset($form['field_cd_clientid']);
+      unset($form['field_cd_rootplacementid']);
       break;
   }
 }
@@ -680,8 +683,44 @@ class GdeApiController {
 
     $this->saveCampaignData($xml->campaigns->campaign);
 
+    $this->createPlacements();
+
     //Campaign created succesfully.
     return TRUE;
+  }
+
+  private function createPlacements() {
+    foreach ($this->nodeWrapper->field_categories as $category) {
+      foreach ($category->field_websites as $website) {
+        $parentPlacementID = $this->nodeWrapper->field_cd_rootplacementid->value();
+        $folderName = $website->field_site->label();
+        $create_placement_url = "{$this->api_url}/AddPlacement.php?sessionID={$this->sessionID}&parentID={$parentPlacementID}&name={$folderName}&isFolder=Y";
+        $xml = simplexml_load_file($create_placement_url);
+        if ($xml->status != self::STATUS_OK) {
+          drupal_set_message("Error creating the folders in GDE api: {$xml->status}", 'error');
+          if (!empty($xml->errorDescription)) {
+            drupal_set_message((string) $xml->errorDescription, 'error');
+          }
+          return FALSE;
+        }
+        else {
+          $bannerParentPlacementID = (string) $xml->placements->placement->placementID;
+          $banners = $website->field_ad_format->value();
+          foreach ($banners as $banner) {
+            $bannerName = $banner->name;
+            $create_placement_url = "{$this->api_url}/AddPlacement.php?sessionID={$this->sessionID}&parentID={$bannerParentPlacementID}&name={$bannerName}&isFolder=N";
+            $xml_banner = simplexml_load_file($create_placement_url);
+            if ($xml_banner->status != self::STATUS_OK) {
+              drupal_set_message("Error creating the placements in GDE api: {$xml->status}", 'error');
+              if (!empty($xml_banner->errorDescription)) {
+                drupal_set_message((string) $xml_banner->errorDescription, 'error');
+              }
+              return FALSE;
+            }
+          }
+        }
+      }
+    }
   }
 
   private function saveCampaignData($campaign) {
