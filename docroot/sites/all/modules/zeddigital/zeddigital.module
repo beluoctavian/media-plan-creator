@@ -607,7 +607,6 @@ class GdeApiController {
     $xml = simplexml_load_file($login_url);
     if ($xml->status == self::STATUS_OK) {
       $this->sessionID = $xml->sessionID;
-      drupal_set_message("Session opened: {$this->sessionID}", 'status');
       return TRUE;
     }
     return FALSE;
@@ -626,7 +625,6 @@ class GdeApiController {
     $logout_url = "{$this->api_url}/CloseSession.php?sessionID={$this->sessionID}";
     $xml = simplexml_load_file($logout_url);
     if ($xml->status == self::STATUS_OK) {
-      drupal_set_message("Session destroyed: {$this->sessionID}", 'status');
       $this->sessionID = NULL;
       return TRUE;
     }
