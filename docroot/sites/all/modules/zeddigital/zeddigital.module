@@ -447,6 +447,7 @@ function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
     ];
     $field_total_net_budget['#prefix'] = "<div id='budget-wrapper-{$context['delta']}'>";
     $field_total_net_budget['#suffix'] = "</div>";
+    $field_total_net_budget['#disabled'] = TRUE;
     if (!empty($field_bought_adviews['#default_value']) && !empty($field_cpm['#default_value'])) {
       /**
        * Compute "Total Net Budget" value.
