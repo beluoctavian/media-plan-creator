@@ -433,19 +433,21 @@ function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
     $field_bought_adviews = &$element['field_bought_adviews'][LANGUAGE_NONE][0]['value'];
     $field_cpm = &$element['field_cpm'][LANGUAGE_NONE][0]['value'];
     $field_total_net_budget = &$element['field_total_net_budget'][LANGUAGE_NONE][0]['value'];
+    $parents = $field_total_net_budget['#field_parents'];
+    $ajax_wrapper = "budget-wrapper-" . implode('-', $parents);
     $field_bought_adviews['#ajax'] = [
       'event' => 'change',
       'callback' => '_zeddigital_field_net_budget_ajax',
       'method' => 'replace',
-      'wrapper' => "budget-wrapper-{$context['delta']}",
+      'wrapper' => $ajax_wrapper,
     ];
     $field_cpm['#ajax'] = [
       'event' => 'change',
       'callback' => '_zeddigital_field_net_budget_ajax',
       'method' => 'replace',
-      'wrapper' => "budget-wrapper-{$context['delta']}",
+      'wrapper' => $ajax_wrapper,
     ];
-    $field_total_net_budget['#prefix'] = "<div id='budget-wrapper-{$context['delta']}'>";
+    $field_total_net_budget['#prefix'] = "<div id='{$ajax_wrapper}'>";
     $field_total_net_budget['#suffix'] = "</div>";
     $field_total_net_budget['#disabled'] = TRUE;
     if (!empty($field_bought_adviews['#default_value']) && !empty($field_cpm['#default_value'])) {
@@ -453,10 +455,9 @@ function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
        * Compute "Total Net Budget" value.
        * The formula is: ("Bought adviews" * "Net Cost-Per-Thou (CPM)") / 1000
        */
-      $parents = $field_total_net_budget['#field_parents'];
-      unset($form_state['input'][$parents[0]][$parents[1]][$parents[2]][$parents[3]][$parents[4]][$parents[5]]['field_total_net_budget'][LANGUAGE_NONE][0]['value']);
-      $field_total_net_budget['#default_value'] =
-        ($field_bought_adviews['#default_value'] * $field_cpm['#default_value']) / 1000;
+      $value = ($field_bought_adviews['#default_value'] * $field_cpm['#default_value']) / 1000;
+      $form_state['input'][$parents[0]][$parents[1]][$parents[2]][$parents[3]][$parents[4]][$parents[5]]['field_total_net_budget'][LANGUAGE_NONE][0]['value'] = $value;
+      $field_total_net_budget['#default_value'] = $value;
     }
   }
 }
