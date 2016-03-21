@@ -423,17 +423,50 @@ function zeddigital_node_insert($node) {
  * Implements hook_field_widget_form_alter().
  */
 function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
-  // TO DO: AJAX AUTOCOMPLETE
   if (!empty($element['#bundle']) && $element['#bundle'] == 'field_websites' && $element['#field_name'] == 'field_websites') {
-    $field_bouglt_adviews = &$element['field_bought_adviews'];
-    $field_cpm = &$element['field_cpm'];
-    $field_total_net_budget = &$element['field_total_net_budget'];
+    $element['field_site'][LANGUAGE_NONE]['#ajax'] = [
+      'event' => 'change',
+      'callback' => '_zeddigital_field_site_ajax_callback',
+      'method' => 'replace',
+    ];
 
-    $field_bouglt_adviews['#attributes']['delta_website'] = array($context['delta']);
-    $field_cpm['#attributes']['delta_website'] = array($context['delta']);
-    $field_total_net_budget['#attributes']['delta_website'] = array($context['delta']);
-    $field_total_net_budget['#attributes']['disabled'] = array('disabled');
+    $field_bought_adviews = &$element['field_bought_adviews'][LANGUAGE_NONE][0]['value'];
+    $field_cpm = &$element['field_cpm'][LANGUAGE_NONE][0]['value'];
+    $field_total_net_budget = &$element['field_total_net_budget'][LANGUAGE_NONE][0]['value'];
+    $field_bought_adviews['#ajax'] = [
+      'event' => 'change',
+      'callback' => '_zeddigital_field_net_budget_ajax',
+      'method' => 'replace',
+      'wrapper' => "budget-wrapper-{$context['delta']}",
+    ];
+    $field_cpm['#ajax'] = [
+      'event' => 'change',
+      'callback' => '_zeddigital_field_net_budget_ajax',
+      'method' => 'replace',
+      'wrapper' => "budget-wrapper-{$context['delta']}",
+    ];
+    $field_total_net_budget['#prefix'] = "<div id='budget-wrapper-{$context['delta']}'>";
+    $field_total_net_budget['#suffix'] = "</div>";
+    if (!empty($field_bought_adviews['#default_value']) && !empty($field_cpm['#default_value'])) {
+      /**
+       * Compute "Total Net Budget" value.
+       * The formula is: ("Bought adviews" * "Net Cost-Per-Thou (CPM)") / 1000
+       */
+      $parents = $field_total_net_budget['#field_parents'];
+      unset($form_state['input'][$parents[0]][$parents[1]][$parents[2]][$parents[3]][$parents[4]][$parents[5]]['field_total_net_budget'][LANGUAGE_NONE][0]['value']);
+      $field_total_net_budget['#default_value'] =
+        ($field_bought_adviews['#default_value'] * $field_cpm['#default_value']) / 1000;
+    }
   }
+}
+
+function _zeddigital_field_site_ajax_callback($form, $form_state) {
+}
+
+function _zeddigital_field_net_budget_ajax($form, $form_state) {
+  $parents = $form_state['triggering_element']['#field_parents'];
+  $field_total_net_budget_value = $form[$parents[0]][$parents[1]][$parents[2]][$parents[3]][$parents[4]][$parents[5]]['field_total_net_budget'][LANGUAGE_NONE][0]['value'];
+  return $field_total_net_budget_value;
 }
 
 /**
