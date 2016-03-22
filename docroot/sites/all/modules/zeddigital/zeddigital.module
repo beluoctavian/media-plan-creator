@@ -425,7 +425,6 @@ function zeddigital_node_insert($node) {
 function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
   if (!empty($element['#bundle']) && $element['#bundle'] == 'field_websites' && $element['#field_name'] == 'field_websites') {
     $element['field_site'][LANGUAGE_NONE]['#ajax'] = [
-      'event' => 'change',
       'callback' => '_zeddigital_field_site_ajax_callback',
       'method' => 'replace',
     ];
@@ -440,12 +439,20 @@ function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
       'callback' => '_zeddigital_field_net_budget_ajax',
       'method' => 'replace',
       'wrapper' => $ajax_wrapper,
+      'progress' => [
+        'type' => 'throbber',
+        'message' => '',
+      ],
     ];
     $field_cpm['#ajax'] = [
       'event' => 'change',
       'callback' => '_zeddigital_field_net_budget_ajax',
       'method' => 'replace',
       'wrapper' => $ajax_wrapper,
+      'progress' => [
+        'type' => 'throbber',
+        'message' => '',
+      ],
     ];
     $field_total_net_budget['#prefix'] = "<div id='{$ajax_wrapper}'>";
     $field_total_net_budget['#suffix'] = "</div>";
