@@ -430,6 +430,10 @@ function zeddigital_field_widget_form_alter(&$element, &$form_state, $context) {
     $field_total_net_budget = &$element['field_total_net_budget'][LANGUAGE_NONE][0]['value'];
     $parents = $field_total_net_budget['#field_parents'];
 
+    $element['field_category'][LANGUAGE_NONE]['#attributes']['onkeypress'] = "this.style.width = ((this.value.length + 5) * 8) + 'px';";
+    $element['field_ad_format'][LANGUAGE_NONE]['#attributes']['onkeypress'] = "this.style.width = ((this.value.length + 5) * 8) + 'px';";
+    $element['field_campaign_type'][LANGUAGE_NONE]['#attributes']['onkeypress'] = "this.style.width = ((this.value.length + 5) * 8) + 'px';";
+
     $element['field_site'][LANGUAGE_NONE]['#attributes']['size'] = FIELD_WEBSITES_INPUT_SIZE;
     $element['field_supplier'][LANGUAGE_NONE]['#attributes']['size'] = FIELD_WEBSITES_INPUT_SIZE;
     $element['field_category'][LANGUAGE_NONE]['#attributes']['size'] = FIELD_WEBSITES_INPUT_SIZE;
