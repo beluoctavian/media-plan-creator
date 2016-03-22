@@ -40,10 +40,74 @@ body.node-type-media-plan .form-item.form-type-item {
 .page-node-edit .field-name-field-brand,
 .page-node-add .field-name-field-brand,
 .page-node-edit .field-name-field-campaign,
-.page-node-add .field-name-field-campaign {
+.page-node-add .field-name-field-campaign,
+.page-node-edit .field-name-field-media-target-audience,
+.page-node-add .field-name-field-media-target-audience {
   display: inline-block;
-  width: 300px;
+  width: 230px;
   margin-right: 20px;
+  vertical-align: top;
+}
+.page-node-edit .field-name-field-client .form-item,
+.page-node-add .field-name-field-client .form-item,
+.page-node-edit .field-name-field-brand .form-item,
+.page-node-add .field-name-field-brand .form-item,
+.page-node-edit .field-name-field-campaign .form-item,
+.page-node-add .field-name-field-campaign .form-item,
+.page-node-edit .field-name-field-media-target-audience .form-item,
+.page-node-add .field-name-field-media-target-audience .form-item {
+  margin: 0;
+  padding: 0;
+}
+.page-node-edit .field-name-field-client .form-item input,
+.page-node-add .field-name-field-client .form-item input,
+.page-node-edit .field-name-field-brand .form-item input,
+.page-node-add .field-name-field-brand .form-item input,
+.page-node-edit .field-name-field-campaign .form-item input,
+.page-node-add .field-name-field-campaign .form-item input,
+.page-node-edit .field-name-field-media-target-audience .form-item input,
+.page-node-add .field-name-field-media-target-audience .form-item input {
+  padding: 0 5px;
+  height: 23px;
+}
+.page-node-edit .field-name-field-brand input,
+.page-node-add .field-name-field-brand input {
+  width: 85%!important;
+}
+.page-node-edit .field-name-field-media-target-audience,
+.page-node-add .field-name-field-media-target-audience {
+  width: auto;
+}
+.page-node-edit .field-name-field-media-target-audience .form-item,
+.page-node-add .field-name-field-media-target-audience .form-item {
+  margin: 0;
+  padding: 0;
+}
+.page-node-edit .field-name-field-media-target-audience .form-item .autocomplete-deluxe-container,
+.page-node-add .field-name-field-media-target-audience .form-item .autocomplete-deluxe-container {
+  min-width: 230px;
+  padding: 2px 6px!important;
+}
+.page-node-edit .field-name-field-media-target-audience .form-item .autocomplete-deluxe-multiple,
+.page-node-add .field-name-field-media-target-audience .form-item .autocomplete-deluxe-multiple {
+  width: auto;
+  height: 19px!important;
+}
+.page-node-edit .field-name-field-media-target-audience .form-item .autocomplete-deluxe-item,
+.page-node-add .field-name-field-media-target-audience .form-item .autocomplete-deluxe-item {
+  margin: 0 3px 0 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.page-node-edit .field-name-field-media-target-audience .form-item div.autocomplete-deluxe-throbber,
+.page-node-add .field-name-field-media-target-audience .form-item div.autocomplete-deluxe-throbber {
+  width: 20px;
+  height: auto;
+}
+.page-node-edit .field-name-field-media-target-audience .form-item input,
+.page-node-add .field-name-field-media-target-audience .form-item input {
+  max-width: 100px;
+  height: 19px!important;
 }
 .page-node-edit .field-name-field-first-currency,
 .page-node-add .field-name-field-first-currency,

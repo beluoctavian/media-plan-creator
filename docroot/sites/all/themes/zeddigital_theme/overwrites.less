@@ -42,10 +42,52 @@ body.node-type-media-plan {
 }
 /* Page node-add/edit-media-plan */
 .page-node-edit, .page-node-add {
-  .field-name-field-client, .field-name-field-brand, .field-name-field-campaign {
+  .field-name-field-client, .field-name-field-brand, .field-name-field-campaign, .field-name-field-media-target-audience {
     display: inline-block;
-    width: 300px;
+    width: 230px;
     margin-right: 20px;
+    vertical-align: top;
+    .form-item {
+      margin: 0;
+      padding: 0;
+      input {
+        padding: 0 5px;
+        height: 23px;
+      }
+    }
+  }
+  .field-name-field-brand {
+    input {
+      width: 85%!important;
+    }
+  }
+  .field-name-field-media-target-audience {
+    width: auto;
+    .form-item {
+      margin: 0;
+      padding: 0;
+      .autocomplete-deluxe-container {
+        min-width: 230px;
+        padding: 2px 6px!important;
+      }
+      .autocomplete-deluxe-multiple {
+        width: auto;
+        height: 19px!important;
+      }
+      .autocomplete-deluxe-item {
+        margin: 0 3px 0 0;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+      div.autocomplete-deluxe-throbber {
+        width: 20px;
+        height: auto;
+      }
+      input {
+        max-width: 100px;
+        height: 19px!important;
+      }
+    }
   }
   .field-name-field-first-currency, .field-name-field-second-currency, .field-name-field-exchange-rate,
   .field-name-field-agency-commission, .field-name-field-vat, .field-name-field-platforms-management-fees {
