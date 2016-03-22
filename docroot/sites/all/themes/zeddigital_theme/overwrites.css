@@ -167,10 +167,10 @@ body.node-type-media-plan .form-item.form-type-item {
   width: 20px;
   height: auto;
 }
-.page-node-edit .field-name-field-websites .form-type-textfield input,
-.page-node-add .field-name-field-websites .form-type-textfield input {
-  width: 110px;
-  height: 27px;
+.page-node-edit .field-name-field-websites input,
+.page-node-add .field-name-field-websites input {
+  height: 25px;
+  line-height: 25px;
 }
 .page-node-edit .field-name-field-websites input.form-submit[value="Remove"],
 .page-node-add .field-name-field-websites input.form-submit[value="Remove"] {
@@ -207,3 +207,6 @@ body.front .views-exposed-widget {
   width: 150px;
 }
 /* Endpage front */
+select[id*='edit-field-categories-und-'][id*='-field-websites-und-'] {
+  display: none;
+}
