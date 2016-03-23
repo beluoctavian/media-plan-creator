@@ -163,15 +163,10 @@ body.node-type-media-plan {
     height: auto;
   }
   .field-name-field-websites {
-    input {
-      height: 25px;
-      line-height: 25px;
-      //width: 110px;
-    }
-    .field-name-field-site, .field-name-field-supplier {
-      .form-type-textfield {
-        input {
-        }
+    .field-name-field-site, .field-name-field-supplier, .field-name-field-category, .field-name-field-ad-format, .field-name-field-campaign-type {
+      input {
+        height: 25px;
+        line-height: 25px;
       }
     }
   }
@@ -184,6 +179,12 @@ body.node-type-media-plan {
     width: 100%;
     padding: 0;
     margin: 0 0 10px 0;
+  }
+  .tabledrag-toggle-weight-wrapper {
+    display: none;
+  }
+  .vertical-tabs {
+    display: none;
   }
 }
 /* End page node-add-media-plan */

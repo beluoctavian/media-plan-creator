@@ -231,8 +231,16 @@ body.node-type-media-plan .form-item.form-type-item {
   width: 20px;
   height: auto;
 }
-.page-node-edit .field-name-field-websites input,
-.page-node-add .field-name-field-websites input {
+.page-node-edit .field-name-field-websites .field-name-field-site input,
+.page-node-add .field-name-field-websites .field-name-field-site input,
+.page-node-edit .field-name-field-websites .field-name-field-supplier input,
+.page-node-add .field-name-field-websites .field-name-field-supplier input,
+.page-node-edit .field-name-field-websites .field-name-field-category input,
+.page-node-add .field-name-field-websites .field-name-field-category input,
+.page-node-edit .field-name-field-websites .field-name-field-ad-format input,
+.page-node-add .field-name-field-websites .field-name-field-ad-format input,
+.page-node-edit .field-name-field-websites .field-name-field-campaign-type input,
+.page-node-add .field-name-field-websites .field-name-field-campaign-type input {
   height: 25px;
   line-height: 25px;
 }
@@ -247,6 +255,14 @@ body.node-type-media-plan .form-item.form-type-item {
   width: 100%;
   padding: 0;
   margin: 0 0 10px 0;
+}
+.page-node-edit .tabledrag-toggle-weight-wrapper,
+.page-node-add .tabledrag-toggle-weight-wrapper {
+  display: none;
+}
+.page-node-edit .vertical-tabs,
+.page-node-add .vertical-tabs {
+  display: none;
 }
 /* End page node-add-media-plan */
 /* Start page-node node-type-media-plan */
