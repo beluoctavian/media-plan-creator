@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Zeddigital feature feature.
+ */
+
+include_once 'zeddigital_feature.features.inc';
