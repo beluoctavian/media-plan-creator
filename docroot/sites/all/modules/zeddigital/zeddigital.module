@@ -196,7 +196,7 @@ function _zeddigital_save_excel($objPHPExcel, $data, $node_wrapper) {
   if(file_exists($path)) {
     unlink($path);
   }
-  $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
   $objWriter->setPreCalculateFormulas(true);
   $objWriter->save($path);
   $old_drupal_file = $node_wrapper->field_excel_file->value();
