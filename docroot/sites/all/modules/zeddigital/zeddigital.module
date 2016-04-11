@@ -493,75 +493,83 @@ function _zeddigital_field_site_ajax_callback($form, &$form_state) {
   $site_term = taxonomy_get_term_by_name($site, 'websites');
   if (!empty($site_term)) {
     $site_term = reset($site_term);
-    $query = db_select('field_data_field_site', 'site')
-      ->fields('site', ['entity_id'])
-      ->condition('site.bundle', 'field_websites')
-      ->condition('site.field_site_tid', $site_term->tid)
-      ->orderBy('site.revision_id', 'DESC')
-      ->range(0, 1);
-    $entity_id = reset($query->execute()->fetchCol());
+    $category = $form[$parents[0]][$parents[1]][$parents[2]];
+    $category_term = taxonomy_get_term_by_name($category['field_category_title'][LANGUAGE_NONE]['#default_value'], 'categories');
+    if (!empty($category_term)) {
+      $category_term = reset($category_term);
+      $query = db_select('field_data_field_site', 'site');
+      $query->innerJoin('field_data_field_websites', 'websites', 'websites.field_websites_value = site.entity_id');
+      $query->innerJoin('field_data_field_category_title', 'cattitle', 'cattitle.entity_id = websites.entity_id');
+      $query->fields('site', ['entity_id'])
+        ->condition('site.bundle', 'field_websites')
+        ->condition('site.field_site_tid', $site_term->tid)
+        ->condition('cattitle.field_category_title_tid', $category_term->tid)
+        ->orderBy('site.revision_id', 'DESC')
+        ->range(0, 1);
+      $entity_id = reset($query->execute()->fetchCol());
+      dpm($entity_id);
 
-    $query = db_select('field_data_field_supplier', 'supplier')
-      ->fields('supplier', ['field_supplier_tid'])
-      ->condition('supplier.entity_id', $entity_id);
-    $supplier_tid = $query->execute()->fetchCol();
+      $query = db_select('field_data_field_supplier', 'supplier')
+        ->fields('supplier', ['field_supplier_tid'])
+        ->condition('supplier.entity_id', $entity_id);
+      $supplier_tid = $query->execute()->fetchCol();
 
-    $query = db_select('field_data_field_category', 'cat')
-      ->fields('cat', ['field_category_tid'])
-      ->condition('cat.entity_id', $entity_id);
-    $category_tids = $query->execute()->fetchCol();
+      $query = db_select('field_data_field_category', 'cat')
+        ->fields('cat', ['field_category_tid'])
+        ->condition('cat.entity_id', $entity_id);
+      $category_tids = $query->execute()->fetchCol();
 
-    $query = db_select('field_data_field_ad_format', 'ad')
-      ->fields('ad', ['field_ad_format_tid'])
-      ->condition('ad.entity_id', $entity_id);
-    $ad_format_tids = $query->execute()->fetchCol();
+      $query = db_select('field_data_field_ad_format', 'ad')
+        ->fields('ad', ['field_ad_format_tid'])
+        ->condition('ad.entity_id', $entity_id);
+      $ad_format_tids = $query->execute()->fetchCol();
 
-    $query = db_select('field_data_field_campaign_type', 'type')
-      ->fields('type', ['field_campaign_type_tid'])
-      ->condition('type.entity_id', $entity_id);
-    $campaign_type_tids = $query->execute()->fetchCol();
+      $query = db_select('field_data_field_campaign_type', 'type')
+        ->fields('type', ['field_campaign_type_tid'])
+        ->condition('type.entity_id', $entity_id);
+      $campaign_type_tids = $query->execute()->fetchCol();
 
-    $tids = array_merge($supplier_tid, $category_tids, $ad_format_tids, $campaign_type_tids);
-    $terms = taxonomy_term_load_multiple($tids);
+      $tids = array_merge($supplier_tid, $category_tids, $ad_format_tids, $campaign_type_tids);
+      $terms = taxonomy_term_load_multiple($tids);
 
-    $supplier_value = $terms[reset($supplier_tid)]->name;
-    $form_element['field_supplier'][LANGUAGE_NONE]['#value'] = $supplier_value;
-    $form_element['field_supplier'][LANGUAGE_NONE]['#default_value'] = $supplier_value;
-    $field_supplier_size = strlen($supplier_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($supplier_value) : FIELD_WEBSITES_INPUT_SIZE;
-    $form_element['field_supplier'][LANGUAGE_NONE]['#attributes']['size'] = $field_supplier_size;
+      $supplier_value = $terms[reset($supplier_tid)]->name;
+      $form_element['field_supplier'][LANGUAGE_NONE]['#value'] = $supplier_value;
+      $form_element['field_supplier'][LANGUAGE_NONE]['#default_value'] = $supplier_value;
+      $field_supplier_size = strlen($supplier_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($supplier_value) : FIELD_WEBSITES_INPUT_SIZE;
+      $form_element['field_supplier'][LANGUAGE_NONE]['#attributes']['size'] = $field_supplier_size;
 
-    $category_value = [];
-    foreach ($category_tids as $tid) {
-      $category_value[] = $terms[$tid]->name;
+      $category_value = [];
+      foreach ($category_tids as $tid) {
+        $category_value[] = $terms[$tid]->name;
+      }
+      $category_value = implode(', ', $category_value);
+      $form_element['field_category'][LANGUAGE_NONE]['#value'] = $category_value;
+      $form_element['field_category'][LANGUAGE_NONE]['#default_value'] = $category_value;
+      $field_category_size = strlen($category_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($category_value) : FIELD_WEBSITES_INPUT_SIZE;
+      $form_element['field_category'][LANGUAGE_NONE]['#attributes']['size'] = $field_category_size;
+
+      $ad_format_value = [];
+      foreach ($ad_format_tids as $tid) {
+        $ad_format_value[] = $terms[$tid]->name;
+      }
+      $ad_format_value = implode(', ', $ad_format_value);
+      $form_element['field_ad_format'][LANGUAGE_NONE]['#value'] = $ad_format_value;
+      $form_element['field_ad_format'][LANGUAGE_NONE]['#default_value'] = $ad_format_value;
+      $field_ad_format_size = strlen($ad_format_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($ad_format_value) : FIELD_WEBSITES_INPUT_SIZE;
+      $form_element['field_ad_format'][LANGUAGE_NONE]['#attributes']['size'] = $field_ad_format_size;
+
+      $campaign_type_value = [];
+      foreach ($campaign_type_tids as $tid) {
+        $campaign_type_value[] = $terms[$tid]->name;
+      }
+      $campaign_type_value = implode(', ', $campaign_type_value);
+      $form_element['field_campaign_type'][LANGUAGE_NONE]['#value'] = $campaign_type_value;
+      $form_element['field_campaign_type'][LANGUAGE_NONE]['#default_value'] = $campaign_type_value;
+      $field_campaign_type_size = strlen($campaign_type_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($campaign_type_value) : FIELD_WEBSITES_INPUT_SIZE;
+      $form_element['field_campaign_type'][LANGUAGE_NONE]['#attributes']['size'] = $field_campaign_type_size;
     }
-    $category_value = implode(', ', $category_value);
-    $form_element['field_category'][LANGUAGE_NONE]['#value'] = $category_value;
-    $form_element['field_category'][LANGUAGE_NONE]['#default_value'] = $category_value;
-    $field_category_size = strlen($category_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($category_value) : FIELD_WEBSITES_INPUT_SIZE;
-    $form_element['field_category'][LANGUAGE_NONE]['#attributes']['size'] = $field_category_size;
-
-    $ad_format_value = [];
-    foreach ($ad_format_tids as $tid) {
-      $ad_format_value[] = $terms[$tid]->name;
-    }
-    $ad_format_value = implode(', ', $ad_format_value);
-    $form_element['field_ad_format'][LANGUAGE_NONE]['#value'] = $ad_format_value;
-    $form_element['field_ad_format'][LANGUAGE_NONE]['#default_value'] = $ad_format_value;
-    $field_ad_format_size = strlen($ad_format_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($ad_format_value) : FIELD_WEBSITES_INPUT_SIZE;
-    $form_element['field_ad_format'][LANGUAGE_NONE]['#attributes']['size'] = $field_ad_format_size;
-
-    $campaign_type_value = [];
-    foreach ($campaign_type_tids as $tid) {
-      $campaign_type_value[] = $terms[$tid]->name;
-    }
-    $campaign_type_value = implode(', ', $campaign_type_value);
-    $form_element['field_campaign_type'][LANGUAGE_NONE]['#value'] = $campaign_type_value;
-    $form_element['field_campaign_type'][LANGUAGE_NONE]['#default_value'] = $campaign_type_value;
-    $field_campaign_type_size = strlen($campaign_type_value) > FIELD_WEBSITES_INPUT_SIZE ? strlen($campaign_type_value) : FIELD_WEBSITES_INPUT_SIZE;
-    $form_element['field_campaign_type'][LANGUAGE_NONE]['#attributes']['size'] = $field_campaign_type_size;
-
-    return $form_element;
   }
+  return $form_element;
 }
 
 function _zeddigital_field_net_budget_ajax($form, &$form_state) {
