@@ -507,7 +507,6 @@ function _zeddigital_field_site_ajax_callback($form, &$form_state) {
         ->orderBy('site.revision_id', 'DESC')
         ->range(0, 1);
       $entity_id = reset($query->execute()->fetchCol());
-      dpm($entity_id);
 
       $query = db_select('field_data_field_supplier', 'supplier')
         ->fields('supplier', ['field_supplier_tid'])
